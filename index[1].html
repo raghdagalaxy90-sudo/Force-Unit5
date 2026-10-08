@@ -1,0 +1,1264 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Forces Quest</title>
+<meta name="description" content="Dr. Raghda's Class — Unit 5 Forces review game with teacher dashboard">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Cairo:wght@500;700&display=swap">
+<style>
+/* Layout: index-card deck — one lesson-tinted card at a time, pastel tabs per lesson (TPK12–16). */
+:root{
+  --bg:#fbf7f2; --surface:#ffffff; --surface2:#f6f1fb; --ink:#3b3651; --muted:#7a7393; --line:#ebe4f3;
+  --primary:#7d63cc; --primary-ink:#ffffff; --primary-soft:#ece5fb;
+  --ok:#2f9e6e; --ok-soft:#ddf5e9; --bad:#d65a78; --bad-soft:#fde3ea; --gold:#e9b949;
+  --lav:#d9ccf7; --lav-s:#f3eefd; --sky:#c3e2f7; --sky-s:#eaf5fd; --peach:#ffd6bf; --peach-s:#fff1e8;
+  --mint:#bfead6; --mint-s:#e8f8f0; --pink:#f8c6d8; --pink-s:#fdedf3; --lemon:#fbeaa8; --lemon-s:#fff9e2;
+  --shadow:0 1px 2px rgba(59,54,81,.06),0 8px 24px rgba(125,99,204,.08);
+  --f-display:"Fredoka","Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Nunito","Segoe UI",system-ui,sans-serif;
+  --f-ar:"Cairo","Segoe UI",Tahoma,sans-serif;
+  --r:18px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1d1b27; --surface:#272434; --surface2:#2f2b3f; --ink:#f1edfb; --muted:#aba4c4; --line:#3b3650;
+  --primary:#b49cf5; --primary-ink:#1d1b27; --primary-soft:#3a3157;
+  --ok:#7fd8ad; --ok-soft:#21392f; --bad:#f39ab0; --bad-soft:#43262f; --gold:#f2cf6e;
+  --lav:#6e5fa3; --lav-s:#2f2a45; --sky:#4f7a99; --sky-s:#243341; --peach:#a3735a; --peach-s:#3a2c25;
+  --mint:#4f8f74; --mint-s:#22352d; --pink:#a3607a; --pink-s:#3a2630; --lemon:#9a8645; --lemon-s:#353020;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1d1b27; --surface:#272434; --surface2:#2f2b3f; --ink:#f1edfb; --muted:#aba4c4; --line:#3b3650;
+  --primary:#b49cf5; --primary-ink:#1d1b27; --primary-soft:#3a3157;
+  --ok:#7fd8ad; --ok-soft:#21392f; --bad:#f39ab0; --bad-soft:#43262f; --gold:#f2cf6e;
+  --lav:#6e5fa3; --lav-s:#2f2a45; --sky:#4f7a99; --sky-s:#243341; --peach:#a3735a; --peach-s:#3a2c25;
+  --mint:#4f8f74; --mint-s:#22352d; --pink:#a3607a; --pink-s:#3a2630; --lemon:#9a8645; --lemon-s:#353020;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); color-scheme:dark}
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 var(--f-body);padding-inline:16px;padding-block:0 48px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:860px;margin:0 auto}
+.wide{max-width:1160px}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;line-height:1.2;text-wrap:balance;margin:0}
+.ar{font-family:var(--f-ar);direction:rtl}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--primary);outline-offset:2px;border-radius:10px}
+.num{font-variant-numeric:tabular-nums}
+
+/* header */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);margin-inline:-16px;padding:10px 16px}
+.top .row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;max-width:1160px;margin:0 auto}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:40px;height:40px;border-radius:12px;background:conic-gradient(from 200deg,var(--lav),var(--sky),var(--mint),var(--lemon),var(--peach),var(--pink),var(--lav));display:grid;place-items:center;font:700 18px var(--f-display);color:#3b3651;flex:none}
+.brand b{font:600 17px var(--f-display);display:block}
+.brand small{color:var(--muted);font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;font-weight:700}
+nav.tabs{display:flex;gap:4px;flex-wrap:wrap}
+nav.tabs a{padding:7px 12px;border-radius:999px;color:var(--muted);text-decoration:none;font-weight:700;font-size:14px}
+nav.tabs a[aria-current="page"]{background:var(--primary-soft);color:var(--ink)}
+nav.tabs a:hover{color:var(--ink)}
+
+/* generic */
+.view{padding-top:22px}
+.card{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:22px}
+.btn{border:0;border-radius:14px;padding:12px 20px;font-weight:800;background:var(--primary);color:var(--primary-ink);transition:transform .12s, filter .12s}
+.btn:hover{filter:brightness(1.05)} .btn:active{transform:translateY(1px)}
+.btn.ghost{background:var(--surface2);color:var(--ink)}
+.btn.small{padding:8px 14px;font-size:14px;border-radius:12px}
+.btn.danger{background:var(--bad-soft);color:var(--bad)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.muted{color:var(--muted)}
+.label{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.field{display:grid;gap:6px}
+.field input,.field select{border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:11px 14px;width:100%}
+.field input:focus,.field select:focus{border-color:var(--primary);outline:none}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:600px){.grid2{grid-template-columns:1fr}}
+.stack{display:grid;gap:18px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:2px solid transparent;border-radius:14px;padding:9px 13px;font-weight:700;font-size:14.5px;background:var(--surface2);display:flex;align-items:center;gap:8px;text-align:left}
+.chip .code{font:600 11px var(--f-display);letter-spacing:.06em;opacity:.75}
+.chip[aria-pressed="true"]{border-color:var(--ink)}
+.t-lav{background:var(--lav-s)} .t-sky{background:var(--sky-s)} .t-peach{background:var(--peach-s)} .t-mint{background:var(--mint-s)} .t-pink{background:var(--pink-s)}
+.d-lav{background:var(--lav)} .d-sky{background:var(--sky)} .d-peach{background:var(--peach)} .d-mint{background:var(--mint)} .d-pink{background:var(--pink)} .d-lemon{background:var(--lemon)}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.notice{border-radius:14px;padding:10px 14px;font-size:14px;background:var(--lemon-s)}
+
+/* home hero */
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:start}
+@media (max-width:760px){.hero{grid-template-columns:1fr}}
+.hero h1{font-size:clamp(30px,5vw,44px);font-weight:700}
+.hero h1 span{background:linear-gradient(transparent 62%,var(--lemon) 62%)}
+.rules{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.rules li{display:flex;gap:12px;align-items:flex-start;font-size:14.5px}
+.rules .pt{font:600 13px var(--f-display);min-width:52px;text-align:center;border-radius:10px;padding:4px 6px;flex:none}
+.deck{position:relative;height:150px;margin-top:6px}
+.deck div{position:absolute;inset:auto;width:70%;height:110px;border-radius:16px;box-shadow:var(--shadow);padding:14px;font:600 14px var(--f-display);color:#3b3651}
+.deck div:nth-child(1){left:0;top:30px;transform:rotate(-6deg)}
+.deck div:nth-child(2){left:12%;top:16px;transform:rotate(-1deg)}
+.deck div:nth-child(3){left:26%;top:4px;transform:rotate(5deg)}
+@media (max-width:760px){.deck{display:none}}
+
+/* quiz */
+.hud{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.pill{background:var(--surface);border-radius:999px;padding:7px 14px;font-weight:800;font-size:14px;box-shadow:var(--shadow);display:flex;gap:6px;align-items:center}
+.pill .k{color:var(--muted);font-weight:700}
+.streak-on{background:var(--peach-s)}
+.progress{height:10px;background:var(--surface2);border-radius:999px;overflow:hidden;margin-bottom:18px}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--lav),var(--sky),var(--mint));border-radius:999px;transition:width .35s}
+.qcard{border-radius:24px;padding:24px;box-shadow:var(--shadow);position:relative}
+.qmeta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.tag{font:600 12px var(--f-display);letter-spacing:.05em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:var(--surface);color:var(--ink)}
+.qtext{font:500 clamp(19px,2.6vw,23px)/1.45 var(--f-display);margin:0 0 18px}
+.qtext mark{background:var(--bad-soft);color:var(--bad);padding:0 4px;border-radius:6px;text-decoration:line-through wavy;text-decoration-thickness:1px}
+.qhint{font-size:14px;color:var(--muted);margin:-8px 0 14px}
+.opts{display:grid;gap:10px}
+.opts.tf{grid-template-columns:1fr 1fr}
+.opt{background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:13px 16px;text-align:left;font-weight:700;display:flex;gap:12px;align-items:center;min-height:54px;transition:border-color .15s, transform .12s}
+.opt:hover:not([disabled]){border-color:var(--primary);transform:translateY(-1px)}
+.opt .key{font:600 13px var(--f-display);width:28px;height:28px;border-radius:9px;background:var(--surface2);display:grid;place-items:center;flex:none}
+.opt.correct{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt.gone{opacity:.25}
+.opt[disabled]{cursor:default}
+.tf .opt{justify-content:center;font:600 20px var(--f-display);min-height:72px}
+.numrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.numrow input{flex:1 1 160px;min-width:0;border:2px solid var(--line);border-radius:14px;padding:13px 14px;font-weight:800;font-size:18px;background:var(--surface)}
+.numrow .unit{font:600 18px var(--f-display)}
+.fb{margin-top:16px;border-radius:16px;padding:14px 16px;display:grid;gap:4px}
+.fb.ok{background:var(--ok-soft)} .fb.no{background:var(--bad-soft)}
+.fb b{font-family:var(--f-display);font-weight:600;font-size:18px}
+.qfoot{display:flex;justify-content:space-between;gap:10px;margin-top:16px;flex-wrap:wrap}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:800;z-index:30;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.04)}100%{transform:scale(1)}}
+.pop{animation:pop .35s}
+@keyframes shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+.shake{animation:shake .35s}
+
+/* result */
+.res-top{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center}
+@media (max-width:600px){.res-top{grid-template-columns:1fr;justify-items:center;text-align:center}}
+.ring{--p:0;width:150px;height:150px;border-radius:50%;background:conic-gradient(var(--primary) calc(var(--p)*1%),var(--surface2) 0);display:grid;place-items:center}
+.ring div{width:118px;height:118px;border-radius:50%;background:var(--surface);display:grid;place-items:center;text-align:center}
+.ring b{font:700 34px var(--f-display);display:block;line-height:1}
+.badge{display:inline-flex;gap:8px;align-items:center;font:600 15px var(--f-display);padding:6px 14px;border-radius:999px}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.bars{display:grid;gap:10px}
+.bar{display:grid;grid-template-columns:minmax(120px,190px) 1fr 52px;gap:10px;align-items:center;font-size:14px}
+.bar .tr{height:14px;background:var(--surface2);border-radius:999px;overflow:hidden}
+.bar .tr i{display:block;height:100%;border-radius:999px}
+.bar .v{text-align:right;font-weight:800}
+@media (max-width:520px){.bar{grid-template-columns:1fr 46px}.bar .tr{grid-column:1/-1;grid-row:2}}
+.tip{border-radius:16px;padding:16px;background:var(--lemon-s);display:grid;gap:6px}
+.review{display:grid;gap:10px}
+.rv{border-radius:14px;padding:12px 14px;background:var(--surface2);display:grid;gap:4px;font-size:14.5px}
+.rv .a{color:var(--ok);font-weight:800}
+.rv .y{color:var(--bad);font-weight:700}
+
+/* study */
+.flip{perspective:1000px;cursor:pointer;border:0;padding:0;background:none;width:100%;text-align:left}
+.flip .in{position:relative;min-height:230px;transition:transform .5s;transform-style:preserve-3d}
+.flip.on .in{transform:rotateY(180deg)}
+.flip .f,.flip .b{position:absolute;inset:0;backface-visibility:hidden;border-radius:22px;padding:24px;display:grid;align-content:center;gap:10px;box-shadow:var(--shadow)}
+.flip .b{transform:rotateY(180deg);background:var(--surface)}
+.flip .f h3{font-size:22px}
+@media (prefers-reduced-motion:reduce){.flip .in{transition:none}*{animation:none!important}}
+.formula{display:grid;gap:10px}
+.formula div{border-radius:14px;padding:14px 16px;display:grid;gap:2px}
+.formula code{font:600 17px var(--f-display);white-space:normal}
+
+/* leaderboard */
+.lb{display:grid;gap:8px}
+.lb .r{display:grid;grid-template-columns:40px 1fr auto auto;gap:12px;align-items:center;background:var(--surface);border-radius:14px;padding:10px 14px;box-shadow:var(--shadow)}
+.lb .rk{font:700 18px var(--f-display);text-align:center}
+.lb .r:nth-child(1) .rk{color:var(--gold)}
+
+/* teacher */
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+@media (max-width:900px){.kpis{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:520px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{border-radius:16px;padding:14px 16px;display:grid;gap:2px}
+.kpi b{font:700 28px var(--f-display)}
+.panels{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:820px){.panels{grid-template-columns:1fr}}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+.toolbar .field{flex:1 1 180px}
+.tbl{overflow-x:auto;border-radius:14px;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:760px}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--surface2);cursor:pointer;user-select:none}
+tr:last-child td{border-bottom:0}
+.sc{display:inline-block;min-width:52px;text-align:center;border-radius:999px;padding:2px 10px;font-weight:800}
+.g-a{background:var(--ok-soft);color:var(--ok)} .g-b{background:var(--sky-s)} .g-c{background:var(--lemon-s)} .g-d{background:var(--bad-soft);color:var(--bad)}
+.minis{display:flex;gap:3px}
+.minis i{width:16px;height:16px;border-radius:5px;display:block}
+.hard{display:grid;gap:8px;font-size:14px}
+.hard div{display:grid;grid-template-columns:52px 1fr;gap:10px;align-items:start}
+.iconbtn{border:0;background:none;color:var(--muted);padding:4px 8px;border-radius:8px}
+.iconbtn:hover{background:var(--bad-soft);color:var(--bad)}
+.confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.login{max-width:420px;margin:30px auto}
+.qrbox{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center}
+.qr{background:#ffffff;border-radius:14px;padding:10px;width:132px;height:132px;flex:none}
+.qr svg{display:block;width:100%;height:100%}
+.qrlink{font-size:13px;word-break:break-all;color:var(--muted)}
+.qrbig{position:fixed;inset:0;z-index:40;background:var(--bg);display:grid;place-items:center;align-content:center;gap:18px;padding:24px;text-align:center}
+.qrbig .qr{width:min(70vmin,520px);height:min(70vmin,520px);padding:22px;box-shadow:var(--shadow)}
+.qrbig h2{font-size:clamp(26px,4vw,44px)}
+@media (max-width:420px){.qrbox{grid-template-columns:1fr;justify-items:start}}
+footer{margin-top:36px;text-align:center;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="row">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">F</div>
+      <div><b>Forces Quest</b><small>Dr. Raghda's Class · Unit 5</small></div>
+    </div>
+    <nav class="tabs" aria-label="Main">
+      <a href="#home" data-nav="home">Play</a>
+      <a href="#study" data-nav="study">Study cards</a>
+      <a href="#formulas" data-nav="formulas">Formulas</a>
+      <a href="#board" data-nav="board">Top 10</a>
+      <a href="#teacher" data-nav="teacher" id="navTeacher">Teacher</a>
+    </nav>
+  </div>
+</header>
+
+<main id="app" class="wrap"></main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<footer>Forces Quest · Dr. Raghda's Class · Unit 5 (TPK12–TPK16)</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script>
+/* =====================================================================
+   Dr. Raghda's Class — Unit 5 Question Bank (Forces)
+   Source: QB_Unit_5.docx  (TPK12 → TPK16)
+
+   HOW TO EDIT
+   - tf   : [statement, true/false, explanation]
+   - mcq  : [question, [A,B,C,D], correctIndex(0-3), explanation]   (options keep their order)
+   - term / comp / fix / prob : same as mcq but options are SHUFFLED for the student,
+            so you can always put the correct answer first (index 0).
+   - fix  : wrap the wrong word(s) in [[ ]] — it is highlighted for the student.
+   - num  : [question, correctNumber, unit, explanation, tolerance(optional, 0.02 = ±2%)]
+   - cards: [question, model answer]  (study cards, not scored)
+   ===================================================================== */
+
+window.LESSONS = {
+  L12: { code: 'TPK12', name: 'Force & Its Units', tone: 'lav', formula: 'F = m · a   |   1 N = 1 kg·m/s²' },
+  L13: { code: 'TPK13', name: 'Gravitational Force', tone: 'sky', formula: 'F = G · m₁m₂ / r²   |   G = 6.67 × 10⁻¹¹ N·m²/kg²' },
+  L14: { code: 'TPK14', name: 'Centripetal Force', tone: 'peach', formula: 'F = m · v² / r   |   a = v² / r' },
+  L15: { code: 'TPK15', name: 'Friction Force', tone: 'mint', formula: 'Static > Sliding > Rolling (strength of friction)' },
+  L16: { code: 'TPK16', name: 'Viscosity', tone: 'pink', formula: 'F = η · A · v / d   |   η in N·s/m² = Pa·s' }
+};
+
+window.QB = {
+  /* ------------------------------------------------------------ TPK12 */
+  L12: {
+    tf: [
+      ["Newton's second law can be written as the equation a = F/m.", true, 'F = m·a, so a = F/m.'],
+      ['Force and acceleration are scalar quantities.', false, 'Both have magnitude AND direction, so they are vector quantities.'],
+      ['Acceleration is a change in velocity caused by an unbalanced force.', true, 'An unbalanced (net) force changes velocity, which is acceleration.'],
+      ['When no resultant force affects the object, it does not move with acceleration.', true, 'Zero net force means a = 0: the object stays at rest or keeps a constant velocity.'],
+      ['Frictional force is an example of a contact force.', true, 'Friction needs the two surfaces to touch.'],
+      ['Force always causes motion in the object.', false, 'A force can be balanced, or change only the shape of an object (e.g. pushing a wall).'],
+      ['Contact forces do not require physical interaction.', false, 'Contact forces need physical contact between the objects.'],
+      ['When the interaction vanishes, there is no force between the two objects.', true, 'Force exists only as a result of interaction.'],
+      ['The net force on an object moving at constant velocity is zero.', true, 'Constant velocity means a = 0, so ΣF = m·a = 0.'],
+      ['The formula for force is F = m·a.', true, "Newton's second law."]
+    ],
+    fix: [
+      ['Force is a [[scalar]] quantity.', ['vector', 'basic', 'energy', 'fixed'], 0, 'Force has magnitude and direction.'],
+      ['Friction is a [[non-contact]] force.', ['contact', 'magnetic', 'gravitational', 'field'], 0, 'Friction acts only where surfaces touch.'],
+      ['Newton equals 1 [[kg/m²]].', ['kg·m/s²', 'kg·m/s', 'kg/s²', 'J/s'], 0, 'F = m·a → kg × m/s² = kg·m/s².'],
+      ['Magnetic force is an example of a [[contact]] force.', ['non-contact', 'frictional', 'normal', 'tension'], 0, 'Magnets act at a distance.'],
+      ['Force [[can exist without]] interaction between objects.', ['only exists as a result of', 'is stronger without', 'has no relation to', 'is weaker with'], 0, 'No interaction → no force.'],
+      ['The SI unit of force is the [[joule]].', ['newton', 'watt', 'pascal', 'kilogram'], 0, 'The joule is the unit of energy/work.'],
+      ['Air resistance is a [[non-contact]] force.', ['contact', 'magnetic', 'gravitational', 'electric'], 0, 'Air particles touch the moving object.'],
+      ['[[Non-contact]] forces are produced when two objects interact and have a physical contact with each other.', ['Contact', 'Gravitational', 'Magnetic', 'Electric'], 0, 'Physical contact describes contact forces.'],
+      ['[[Energy]] is a vector quantity measured using the SI unit known as the Newton.', ['Force', 'Mass', 'Speed', 'Work'], 0, 'Force is the vector measured in newtons.'],
+      ['A force of 10 N applied to a 5 kg object gives it an acceleration of [[50 m/s²]].', ['2 m/s²', '0.5 m/s²', '15 m/s²', '5 m/s²'], 0, 'a = F/m = 10/5 = 2 m/s².']
+    ],
+    mcq: [
+      ['Forces only exist as a result of an ……', ['contact', 'non-contact', 'effect', 'interaction'], 3, 'Without interaction there is no force.'],
+      ['What is defined as a push or pull?', ['Force', 'Work', 'Vector', 'Speed'], 0, 'A force is a push or a pull.'],
+      ["What is the formula for Newton's 2nd law of motion?", ['F = m·a', 'F = m/a', 'F = m·v', 'F = m/v'], 0, 'Force = mass × acceleration.'],
+      ['Newton is equivalent to ……', ['kg·m/s²', 'kg/m·s²', 'kg·m/s', 'kg/m·s'], 0, 'N = kg × m/s².'],
+      ['What is the SI unit of force?', ['Joule', 'Newton', 'kg·m/s', 'Watt'], 1, 'Force is measured in newtons (N).'],
+      ['Which of the following is NOT a contact force?', ['Friction', 'Tension', 'Gravitational', 'Normal force'], 2, 'Gravity acts at a distance.'],
+      ['A force of 10 N is applied to a 5 kg object. What is the acceleration of the object?', ['50 m/s²', '2 m/s²', '0.5 m/s²', '2 N'], 1, 'a = F/m = 10/5 = 2 m/s².'],
+      ['Which of the following is an example of a non-contact force?', ['Air resistance', 'Magnetic force', 'Frictional force', 'Applied force'], 1, 'Magnetic force acts without touching.'],
+      ['What happens if the resultant force on a moving object is zero?', ['It accelerates.', 'It decelerates.', 'It keeps moving with constant velocity.', 'It comes to rest.'], 2, "Newton's first law: no net force → no change in velocity."],
+      ['A truck with a mass of 2000 kg accelerates at 3 m/s². What force is acting on it?', ['6000 N', '2000 N', '3000 N', '8000 N'], 0, 'F = m·a = 2000 × 3 = 6000 N.'],
+      ['Force has ……', ['only direction', 'only magnitude', 'both magnitude and direction', 'neither magnitude nor direction'], 2, 'Force is a vector quantity.'],
+      ['A 500 kg rocket is fired straight up from the Earth, the engine providing 7500 N of thrust. Its acceleration is ……', ['4.5 m/s²', '5.2 m/s²', '9.8 m/s²', '15 m/s²'], 1, 'Weight = 500 × 9.8 = 4900 N. Net force = 7500 − 4900 = 2600 N → a = 2600/500 = 5.2 m/s².']
+    ],
+    term: [
+      ['An external effect that affects the object; it changes or attempts to change its state or direction.', ['Force', 'Velocity', 'Mass', 'Energy'], 0, ''],
+      ["An action which produces or tends to produce a change in a body's state of rest or motion.", ['Force', 'Inertia', 'Speed', 'Displacement'], 0, ''],
+      ['Forces produced when two objects interact and have a physical contact with each other.', ['Contact forces', 'Non-contact forces', 'Gravitational forces', 'Magnetic forces'], 0, ''],
+      ['Forces that happen when two interacting objects are NOT in physical contact with each other.', ['Non-contact forces', 'Contact forces', 'Frictional forces', 'Tension forces'], 0, ''],
+      ['The force acting on an object of mass 1 kg to give it an acceleration of 1 m/s².', ['Newton', 'Joule', 'Watt', 'Pascal'], 0, '']
+    ],
+    num: [
+      ['What is the magnitude of the force exerted by a horse pulling a cart of mass 600 kg and accelerating at 1.2 m/s²?', 720, 'N', 'F = m·a = 600 × 1.2 = 720 N.'],
+      ['A railway wagon of mass 1000 kg is pulled with a force of 10000 N. What is its acceleration?', 10, 'm/s²', 'a = F/m = 10000 / 1000 = 10 m/s².'],
+      ["A student has a mass of 70 kg and gravity is 10 m/s². What is the student's weight (force of gravity)?", 700, 'N', 'W = m·g = 70 × 10 = 700 N.'],
+      ['A 10 kg truck has a force of 95 N acting in the negative x-direction and 17 N in the positive x-direction. What is the magnitude of its acceleration?', 7.8, 'm/s²', 'Net force = 17 − 95 = −78 N, so a = −78/10 = −7.8 m/s². The truck accelerates in the negative x-direction.', 0.02, 'abs']
+    ],
+    cards: [
+      ['Define the concept of force and its SI unit.', 'Force is an external effect (push or pull) that changes or tries to change the state of rest or motion, or the direction, of an object. Its SI unit is the newton (N).'],
+      ['Define the Newton and find its equivalent unit.', 'One newton is the force that gives a mass of 1 kg an acceleration of 1 m/s². N = kg·m/s².'],
+      ['State the effects of force.', 'A force can: start motion or stop it; change the speed; change the direction of motion; change the shape or size of an object.'],
+      ['Compare contact and non-contact forces (with examples).', 'Contact forces need physical contact: friction, tension, normal force, applied force, air resistance. Non-contact forces act at a distance: gravitational, magnetic and electric forces.']
+    ]
+  },
+
+  /* ------------------------------------------------------------ TPK13 */
+  L13: {
+    tf: [
+      ['The mass of an object can never be zero, but the weight of an object can be zero.', true, 'Weight = m·g; far from any body g ≈ 0, but mass never changes.'],
+      ["A satellite doesn't need any fuel to rotate around the Earth.", true, "Earth's gravity provides the centripetal force that keeps it in orbit."],
+      ['Gravity gets weaker with distance.', true, 'F ∝ 1/r².'],
+      ['Gravity is an invisible force that pulls objects toward each other.', true, 'Gravity is always attractive.'],
+      ['Gravitational force is always repulsive between two objects.', false, 'Gravitational force is always attractive.'],
+      ['The gravitational force between two objects increases as the distance between them increases.', false, 'It decreases: F ∝ 1/r².'],
+      ['The universal gravitational constant G has the same value everywhere in the universe.', true, 'G = 6.67 × 10⁻¹¹ N·m²/kg² everywhere (that is why it is "universal").'],
+      ['Gravitational force depends on both the masses of the objects and the distance between them.', true, 'F = G·m₁m₂/r².'],
+      ['If the distance between two objects is halved, the gravitational force between them becomes four times stronger.', true, '1 / (½)² = 4.'],
+      ['Gravitational force is stronger between smaller objects.', false, 'It is stronger between larger masses.'],
+      ["The Earth's gravitational pull on the Moon is greater than the Moon's pull on the Earth.", false, "The two forces are equal and opposite (Newton's 3rd law)."],
+      ['The gravitational force between two objects is independent of the medium between them.', true, 'Gravity is not affected by the medium.'],
+      ['The gravitational force between two objects is directly proportional to the product of their masses.', true, 'F ∝ m₁m₂.'],
+      ['If the mass of one object is doubled, the gravitational force between the two objects is halved.', false, 'It doubles: F ∝ m₁m₂.']
+    ],
+    mcq: [
+      ['Which factor does NOT affect the gravitational force between two objects?', ['Distance between the objects', 'Mass of the objects', 'Shape of the objects', 'Universal gravitational constant'], 2, 'Only masses and distance appear in F = G·m₁m₂/r².'],
+      ['Gravitational force between two objects is inversely proportional to ……', ['the square of the distance between them', 'the product of their masses', 'the sum of their masses', 'the square root of the distance'], 0, 'F ∝ 1/r².'],
+      ['If the mass of one object is doubled, the gravitational force between two objects ……', ['halves', 'doubles', 'stays the same', 'increases by four times'], 1, 'F ∝ m₁m₂.'],
+      ['The gravitational force is strongest when ……', ['the objects are far apart', 'the objects are close together', 'the masses are small', 'the distance between the objects is large'], 1, 'Smaller r → bigger F.'],
+      ['The gravitational force between two objects is ……', ['directly proportional to the sum of their masses', 'inversely proportional to the square of the distance between them', 'independent of the distance between them', 'stronger if the objects are moving fast'], 1, 'Inverse-square law.'],
+      ['If the distance between two objects is halved, the gravitational force between them will ……', ['double', 'stay the same', 'become four times larger', 'become one-fourth'], 2, '1 / (½)² = 4.'],
+      ['Gravitational force between two objects is strongest when ……', ['the masses are small and the distance is large', 'the masses are large and the distance is small', 'the masses are equal', 'the objects are moving toward each other'], 1, 'Big masses, small distance.'],
+      ['Gravitational force between two objects with mass is ……', ['always attractive', 'always repulsive', 'sometimes attractive, sometimes repulsive', 'zero when the objects are far apart'], 0, 'Gravity only attracts.'],
+      ['If the distance between two objects is doubled, the gravitational force between them becomes ……', ['four times larger', 'twice as large', 'half as large', 'one-fourth as large'], 3, '1 / 2² = ¼.'],
+      ['If the mass of one object is tripled and the other mass stays the same, the gravitational force between them will ……', ['remain the same', 'be halved', 'be tripled', 'be reduced to one-third'], 2, 'F ∝ m₁m₂.']
+    ],
+    comp: [
+      ['The gravitational force between two objects is directly proportional to the product of their ____.', ['masses', 'distances', 'speeds', 'volumes'], 0, ''],
+      ['Gravitational force is an example of a ____ force.', ['non-contact', 'contact', 'frictional', 'repulsive'], 0, ''],
+      ['If the distance between two objects is tripled, the gravitational force between them will become ____.', ['one-ninth', 'one-third', 'three times', 'nine times'], 0, 'F ∝ 1/r² → 1/3² = 1/9.'],
+      ['The gravitational force between two objects decreases as the distance between them ____.', ['increases', 'decreases', 'stays constant', 'is halved'], 0, ''],
+      ['The universal gravitational constant G has a value of ____.', ['6.67 × 10⁻¹¹', '9.8', '6.67 × 10¹¹', '3 × 10⁸'], 0, ''],
+      ['The SI unit of the universal gravitational constant G is ____.', ['N·m²/kg²', 'N/kg', 'N·kg²/m²', 'kg·m/s²'], 0, 'G = F·r²/(m₁m₂) → N·m²/kg².'],
+      ['If the mass of one object is doubled, the gravitational force between the two objects ____.', ['doubles', 'halves', 'quadruples', 'stays the same'], 0, ''],
+      ['The gravitational force between two objects is always ____.', ['attractive', 'repulsive', 'zero', 'a contact force'], 0, ''],
+      ['If the mass of an object is halved, the gravitational force it experiences will ____.', ['be halved', 'double', 'quadruple', 'stay the same'], 0, ''],
+      ['If the distance between two objects is reduced by half, the gravitational force between them becomes ____.', ['four times larger', 'twice as large', 'half as large', 'one-fourth as large'], 0, ''],
+      ['If the masses of both objects are doubled, the gravitational force between them will ____.', ['become four times larger', 'double', 'stay the same', 'be halved'], 0, '2 × 2 = 4.'],
+      ['The force acting on the first body ____ the force acting on the second body.', ['is equal to', 'is greater than', 'is less than', 'is double'], 0, "Newton's 3rd law: equal and opposite."]
+    ],
+    prob: [
+      ['Calculate the gravitational force between the Earth (6 × 10²⁴ kg) and the Sun (2 × 10³⁰ kg). The average distance between them is 1.5 × 10¹¹ m.', ['3.56 × 10²² N', '5.34 × 10³³ N', '2.67 × 10¹¹ N', '8.0 × 10⁴⁴ N'], 0, 'F = G·m₁m₂/r² = 6.67×10⁻¹¹ × 6×10²⁴ × 2×10³⁰ / (1.5×10¹¹)² ≈ 3.56 × 10²² N.'],
+      ['A sphere of mass 40 kg is attracted by another sphere of mass 15 kg with a force of 9.8 × 10⁻⁷ N; the distance between them is 0.2 m. Find G.', ['6.53 × 10⁻¹¹ N·m²/kg²', '3.27 × 10⁻¹⁰ N·m²/kg²', '1.63 × 10⁻⁹ N·m²/kg²', '6.67 × 10⁻⁹ N·m²/kg²'], 0, 'G = F·r² / (m₁m₂) = 9.8×10⁻⁷ × 0.04 / 600 ≈ 6.53 × 10⁻¹¹ N·m²/kg².'],
+      ['Planet A has a mass of 5 × 10²⁴ kg and Planet B has a mass of 8 × 10²² kg. The distance between them is 10⁸ m. Find the gravitational force.', ['2.67 × 10²¹ N', '2.67 × 10²⁹ N', '2.67 × 10¹³ N', '4.0 × 10⁴⁷ N'], 0, 'F = 6.67×10⁻¹¹ × 4×10⁴⁷ / (10⁸)² ≈ 2.67 × 10²¹ N.'],
+      ['Two identical spheres are 1 m apart and attract each other with a force of 1 N. Find the mass of each sphere.', ['1.22 × 10⁵ kg', '1.5 × 10¹⁰ kg', '6.67 × 10⁻¹¹ kg', '3.87 × 10⁵ kg'], 0, '1 = G·m²/1² → m = √(1 / 6.67×10⁻¹¹) ≈ 1.22 × 10⁵ kg.']
+    ],
+    num: [
+      ["Find the gravitational force between the Earth (5.98 × 10²⁴ kg) and a 70 kg student standing at sea level, 6.38 × 10⁶ m from Earth's center.", 686, 'N', 'F = 6.67×10⁻¹¹ × 5.98×10²⁴ × 70 / (6.38×10⁶)² ≈ 686 N (close to m·g = 70 × 9.8).', 0.03]
+    ],
+    term: [
+      ['The force by which a planet or other body draws objects toward its center.', ['Gravity', 'Friction', 'Centripetal force', 'Viscosity'], 0, ''],
+      ['An invisible force that pulls objects toward each other.', ['Gravitational force', 'Air resistance', 'Tension', 'Normal force'], 0, ''],
+      ['The attraction between two masses, directly proportional to the product of the masses and inversely proportional to the square of the distance between them.', ["Newton's law of universal gravitation", "Newton's first law", 'Centripetal force', 'Friction'], 0, '']
+    ],
+    fix: [
+      ['The gravitational force [[pushes objects away from]] the Earth.', ['pulls objects toward', 'pushes objects toward', 'rotates objects around', 'has no effect on'], 0, 'Gravity attracts.'],
+      ['Objects with smaller mass have [[greater]] gravitational force.', ['smaller', 'equal', 'infinite', 'zero'], 0, 'F ∝ m₁m₂.'],
+      ['Gravitational force gets stronger with [[increasing]] distance.', ['decreasing', 'constant', 'doubling', 'any'], 0, 'F ∝ 1/r².'],
+      ['The force of gravity is a [[contact]] force.', ['non-contact', 'frictional', 'repulsive', 'normal'], 0, ''],
+      ['The force acting on the first body is [[greater than]] the force acting on the second body.', ['equal to', 'less than', 'double', 'half'], 0, "Newton's 3rd law."],
+      ['The gravitational force between two bodies is [[inversely]] proportional to the product of their masses.', ['directly', 'not', 'exponentially', 'randomly'], 0, ''],
+      ['The gravitational force between two bodies is [[directly]] proportional to the square of the distance between them.', ['inversely', 'not', 'equally', 'linearly'], 0, ''],
+      ['If the distance between two bodies is [[halved]], the gravitational force becomes one-fourth.', ['doubled', 'tripled', 'quartered', 'unchanged'], 0, '1 / 2² = ¼.'],
+      ['The unit of the gravitational constant is the [[Newton (N)]].', ['N·m²/kg²', 'N/kg', 'kg·m/s²', 'J'], 0, ''],
+      ['The gravitational force can [[push or pull]].', ['only pull (attract)', 'only push (repel)', 'neither push nor pull', 'push only in space'], 0, '']
+    ],
+    cards: [
+      ['Define gravitational force.', 'The force of attraction between any two masses. It is directly proportional to the product of the masses and inversely proportional to the square of the distance between their centers: F = G·m₁m₂/r².'],
+      ['State the unit of gravitational force.', 'Newton (N).'],
+      ['State the unit and value of the gravitational constant G.', 'G = 6.67 × 10⁻¹¹ N·m²/kg².'],
+      ['State the factors affecting gravitational force.', '1) The masses of the two bodies (directly proportional to their product). 2) The distance between their centers (inversely proportional to its square).'],
+      ['Give examples of applications of gravitational force.', 'The Moon orbiting the Earth; satellites orbiting without fuel; planets orbiting the Sun; ocean tides; objects falling to the ground.']
+    ]
+  },
+
+  /* ------------------------------------------------------------ TPK14 */
+  L14: {
+    tf: [
+      ['Centripetal force is considered a new type of force.', false, 'It is not a new force; it is the role played by forces such as gravity, tension or friction.'],
+      ['Centripetal force causes a change in the speed of an object moving in a circular path.', false, 'It changes only the direction of the velocity, not the speed.'],
+      ['Centripetal force depends on the mass of the object.', true, 'F = m·v²/r.'],
+      ['The larger the radius of a circular path, the smaller the centripetal force required.', true, 'F ∝ 1/r.'],
+      ['Centripetal force increases as the tangential velocity of the object increases.', true, 'F ∝ v².'],
+      ['Centripetal acceleration is directly proportional to the square of the velocity.', true, 'a = v²/r.'],
+      ['Increasing the radius of a circular path increases the required centripetal force.', false, 'Bigger radius → smaller force.'],
+      ['Centripetal force is the force acting continuously in a direction normal to the motion of a body, so its path changes from straight into circular.', true, 'This is the definition of centripetal force.'],
+      ['Centripetal force is directly proportional to the radius of the path at constant (v, m).', false, 'It is inversely proportional to the radius.'],
+      ['Centripetal force is directly proportional to mass at constant (v, r).', true, 'F ∝ m.'],
+      ['The acceleration acquired by an object in circular motion due to a change in the direction of its velocity is called "acceleration".', false, 'It is called centripetal acceleration.'],
+      ['Uniform circular motion is the motion of an object in a circular path at a constant speed and constant direction.', false, 'The speed is constant but the direction changes continuously.'],
+      ['The centripetal force on an object in circular motion is constant in direction.', false, 'It always points to the center, so its direction keeps changing.'],
+      ['If the force is in the same direction as motion, the magnitude of velocity increases and its direction does not change.', true, ''],
+      ['If the force is opposite to the direction of motion, the magnitude of velocity decreases and its direction does not change.', true, ''],
+      ['If the force is perpendicular to the direction of motion, the direction of velocity changes and its magnitude does not change.', true, 'This is how centripetal force works.']
+    ],
+    fix: [
+      ['Uniform circular motion means the object has [[constant velocity and constant direction]].', ['constant speed and changing direction', 'changing speed and constant direction', 'zero speed', 'changing speed and changing direction'], 0, ''],
+      ['Increasing the radius of the circle [[increases]] the required centripetal force.', ['decreases', 'doubles', 'does not affect', 'squares'], 0, 'F ∝ 1/r.'],
+      ['Centripetal force is measured in [[joules]].', ['newtons', 'watts', 'm/s²', 'kilograms'], 0, ''],
+      ['Uniform circular motion is the motion of an object in a circular path at a constant speed and [[constant direction]].', ['changing direction', 'changing speed', 'zero acceleration', 'straight path'], 0, ''],
+      ['Centripetal force [[decreases]] as the tangential velocity of the object increases.', ['increases', 'stays constant', 'disappears', 'reverses'], 0, 'F ∝ v².'],
+      ['When the force is perpendicular to the motion, the direction of velocity changes and its magnitude [[also changes]].', ['does not change', 'doubles', 'becomes zero', 'decreases'], 0, '']
+    ],
+    term: [
+      ['The motion of an object in a circular path at a constant speed but changing direction.', ['Uniform circular motion', 'Linear motion', 'Projectile motion', 'Vibratory motion'], 0, ''],
+      ['The acceleration acquired by an object in circular motion due to the change in direction of its velocity.', ['Centripetal acceleration', 'Gravitational acceleration', 'Linear acceleration', 'Deceleration'], 0, ''],
+      ['The force acting continuously normal to the motion of a body, changing its path from straight into circular.', ['Centripetal force', 'Friction force', 'Gravitational force', 'Tension'], 0, '']
+    ],
+    mcq: [
+      ['If the force is in the same direction as motion, the magnitude of velocity …… and its direction does not change.', ['increases', 'changes direction', 'decreases', 'stops'], 0, ''],
+      ['If the direction of force is …… to the direction of motion, the magnitude does not change but the direction of velocity changes.', ['perpendicular', 'equal', 'opposite', 'the same'], 0, ''],
+      ['The force acting continuously normal to the motion of a body, changing its path from straight into circular, is ……', ['mass', 'centripetal force', 'centripetal acceleration', 'acceleration'], 1, ''],
+      ['The factors affecting the centripetal force are ……', ['mass of the object', 'tangential velocity', 'radius of rotation', 'all of them'], 3, 'F = m·v²/r uses all three.'],
+      ['If the velocity of an object in circular motion doubles, the required centripetal force ……', ['stays the same', 'doubles', 'increases by a factor of four', 'decreases by half'], 2, 'F ∝ v² → 2² = 4.'],
+      ['If the radius of a circular path is halved, the centripetal force required ……', ['halves', 'doubles', 'quadruples', 'stays the same'], 1, 'F ∝ 1/r.'],
+      ['What happens to centripetal force if the velocity triples?', ['It stays the same', 'It increases nine times', 'It triples', 'It decreases'], 1, '3² = 9.']
+    ],
+    num: [
+      ['Calculate the centripetal force on a 900 kg car that goes around a 500 m radius curve at 25 m/s.', 1125, 'N', 'F = m·v²/r = 900 × 25² / 500 = 1125 N.'],
+      ['A 250 g rock tied to a 1.5 m string is whirled in a horizontal circle at 15 m/s. Calculate the centripetal force.', 37.5, 'N', 'm = 0.25 kg. a = v²/r = 225/1.5 = 150 m/s², so F = 0.25 × 150 = 37.5 N.'],
+      ['A 1450 kg car goes around a bend of radius 70 m at 70 km/h. Find the centripetal force needed between the tires and the road.', 7832, 'N', 'v = 70 ÷ 3.6 ≈ 19.44 m/s. F = 1450 × 19.44² / 70 ≈ 7832 N.', 0.03],
+      ['A 400 g rock tied to a 2 m string is whirled at 12 m/s. Find its centripetal acceleration.', 72, 'm/s²', 'a = v²/r = 144/2 = 72 m/s² (and F = 0.4 × 72 = 28.8 N).'],
+      ["A 6 kg object moves in a circle at 16 m/s with a centripetal force of 1520 N. Find the radius of its path.", 1.01, 'm', 'r = m·v²/F = 6 × 256 / 1520 ≈ 1.01 m.', 0.03]
+    ],
+    cards: [
+      ['Define uniform circular motion.', 'The motion of an object in a circular path at a constant speed, while its direction changes continuously.'],
+      ['Define centripetal acceleration.', 'The acceleration of an object in circular motion caused by the change in direction of its velocity. It points to the center: a = v²/r.'],
+      ['Define centripetal force.', 'The force acting continuously perpendicular (normal) to the motion of a body, toward the center, changing its path from straight into circular: F = m·v²/r.'],
+      ['State the factors affecting centripetal force.', 'Mass (F ∝ m), velocity (F ∝ v²) and radius of the path (F ∝ 1/r).'],
+      ['What happens if the centripetal force suddenly becomes zero?', 'The object leaves the circular path and moves in a straight line along the tangent to the circle.'],
+      ['Compare centripetal and gravitational force (formulas).', 'Centripetal: F = m·v²/r. Gravitational: F = G·m₁m₂/r². For orbits, gravity provides the centripetal force.'],
+      ['Compare acceleration and centripetal acceleration.', 'Acceleration: change in the magnitude of velocity per unit time (a = Δv/t), along the motion. Centripetal acceleration: change in the direction of velocity only, toward the center (a = v²/r).']
+    ]
+  },
+
+  /* ------------------------------------------------------------ TPK15 */
+  L15: {
+    tf: [
+      ['Friction is the force that resists motion when the surface of one object comes in non-contact with the surface of another.', false, 'Friction happens when the surfaces are in contact.'],
+      ['Friction is the force that opposes motion between any surfaces that are in contact.', true, ''],
+      ['Static friction occurs between solid surfaces.', true, ''],
+      ['Static friction occurs between gas surfaces.', false, 'Friction in gases and liquids is fluid friction.'],
+      ['Sliding friction is weaker than static friction.', true, 'Static > sliding > rolling.'],
+      ['Static friction is weaker than rolling friction.', false, 'Static friction is the strongest.'],
+      ['Rolling friction is much weaker than sliding friction or static friction.', true, ''],
+      ['Sliding friction is much weaker than rolling friction.', false, 'Rolling friction is the weakest.'],
+      ['Fluid friction occurs in liquids and gases.', true, ''],
+      ['Sliding friction occurs in liquids and gases.', false, 'That is fluid friction.'],
+      ['The faster or larger a moving object is, the lower the fluid friction resisting its motion.', false, 'Faster or larger objects meet GREATER fluid friction.'],
+      ['Rolling friction also occurs between solid surfaces.', true, ''],
+      ['Sliding friction is the friction that acts on objects when they are rolling over a surface.', false, 'That is rolling friction.']
+    ],
+    mcq: [
+      ['…… is the force that resists motion when the surface of one object comes in contact with the surface of another.', ['the liquid density', 'the liquid viscosity', 'friction', 'the buoyant force of liquid'], 2, ''],
+      ['A book sliding on a table is an example of ……', ['mass', 'the liquid density', 'friction', 'centripetal force'], 2, ''],
+      ['The factors affecting the frictional force are ……', ['the force pressing the two surfaces together', 'the nature of the two surfaces', 'the angle and position of the object', 'all of them'], 3, 'The pressing (normal) force and the nature of the surfaces; the angle of a slope changes the pressing force.'],
+      ['…… is the force generated by two surfaces that contact and slide against each other.', ['Centripetal force', 'Friction force', 'Gravity', 'None of them'], 1, ''],
+      ['The main types of friction are ……', ['static friction', 'sliding friction', 'rolling friction', 'all of them'], 3, ''],
+      ['…… is a force between two surfaces that prevents them from sliding or slipping across each other.', ['Static friction', 'Sliding friction', 'Rolling friction', 'Fluid friction'], 0, ''],
+      ['…… helps people climb a vertical rock wall.', ['Static friction', 'Sliding friction', 'Rolling friction', 'Fluid friction'], 0, ''],
+      ['…… is friction that acts on objects when they are sliding over a surface.', ['Static friction', 'Sliding friction', 'Rolling friction', 'Fluid friction'], 1, ''],
+      ['The friction between a pencil and paper that leaves a mark is ……', ['Static friction', 'Sliding friction', 'Rolling friction', 'Fluid friction'], 1, ''],
+      ['Friction that acts on objects when they are rolling over a surface is ……', ['Static friction', 'Sliding friction', 'Rolling friction', 'Fluid friction'], 2, ''],
+      ['Bicycle wheels are an example of ……', ['Static friction', 'Sliding friction', 'Rolling friction', 'Fluid friction'], 2, ''],
+      ['Ball bearings are an example of ……', ['Static friction', 'Sliding friction', 'Rolling friction', 'Fluid friction'], 2, '']
+    ],
+    term: [
+      ['The force that resists motion when the surface of one object comes in contact with the surface of another.', ['Friction', 'Gravity', 'Viscosity', 'Tension'], 0, ''],
+      ['The force generated by two surfaces that contact and slide against each other.', ['Friction force', 'Gravity', 'Centripetal force', 'Buoyant force'], 0, ''],
+      ['A force between two surfaces that prevents them from sliding or slipping across each other.', ['Static friction', 'Sliding friction', 'Rolling friction', 'Fluid friction'], 0, ''],
+      ['The force that acts on objects when they are sliding over a surface.', ['Sliding friction', 'Static friction', 'Rolling friction', 'Fluid friction'], 0, ''],
+      ['The force that acts on objects when they are rolling over a surface.', ['Rolling friction', 'Sliding friction', 'Static friction', 'Fluid friction'], 0, ''],
+      ['The force that acts on objects moving through a fluid.', ['Fluid friction', 'Rolling friction', 'Static friction', 'Sliding friction'], 0, '']
+    ],
+    fix: [
+      ['Static friction acts on [[moving]] objects.', ['stationary (non-moving)', 'rolling', 'falling', 'floating'], 0, ''],
+      ['Sliding friction is [[stronger]] than static friction.', ['weaker', 'equal to', 'double', 'the same as'], 0, ''],
+      ['Rolling friction is [[stronger]] than sliding friction.', ['weaker', 'equal to', 'double', 'the same as'], 0, ''],
+      ['Friction is the force that resists motion when the surface of one object comes in [[non-contact]] with the surface of another.', ['contact', 'orbit', 'rotation', 'balance'], 0, ''],
+      ['Frictional force is the force that [[allows]] the sliding or rolling of one solid object over another.', ['opposes', 'speeds up', 'causes', 'reverses'], 0, ''],
+      ['The faster or larger a moving object is, the [[lower]] the fluid friction resisting its motion.', ['greater', 'zero', 'constant', 'negative'], 0, '']
+    ],
+    cards: [
+      ['Define friction force.', 'The force that resists motion when the surface of one object comes in contact with the surface of another.'],
+      ['State the factors affecting friction force.', '1) The force pressing the two surfaces together. 2) The nature (roughness) of the two surfaces.'],
+      ['Compare static, sliding, rolling and fluid friction (with examples).', 'Static: prevents surfaces from slipping, object at rest (climbing a rock wall). Sliding: surfaces slide over each other (book sliding on a table, pencil on paper). Rolling: object rolls over a surface (bicycle wheels, ball bearings). Fluid: object moving through a liquid or gas (swimming, air resistance). Strength: static > sliding > rolling.']
+    ]
+  },
+
+  /* ------------------------------------------------------------ TPK16 */
+  L16: {
+    tf: [
+      ['Viscosity is the property responsible for resisting the relative motion of liquid layers.', true, ''],
+      ['Viscosity is a physical property, so it depends on the mass of the liquid.', false, 'It depends on the type of liquid and the temperature, not the mass.'],
+      ['Viscosity is a physical property, so it depends on temperature and type of liquid.', true, ''],
+      ['The most viscous liquid flows slowly and offers high resistance to the movement of objects in it.', true, ''],
+      ['The least viscous liquid flows quickly and offers little resistance to the movement of objects in it.', true, ''],
+      ['The most viscous liquid flows quickly and offers little resistance to the movement of objects in it.', false, 'High viscosity → slow flow, high resistance.'],
+      ['The least viscous liquid flows slowly and offers high resistance to the movement of objects in it.', false, 'Low viscosity → fast flow, little resistance.'],
+      ['If we drop one ball in water and another in glycerin, the ball in water reaches the bottom faster.', true, 'Water is less viscous than glycerin.'],
+      ['If we drop one ball in water and another in glycerin, the ball in glycerin reaches the bottom faster.', false, 'Glycerin is more viscous, so the ball falls slower.'],
+      ['Increasing temperature decreases the viscosity of liquids.', true, 'Warm honey flows faster.'],
+      ['The viscosity coefficient is measured in pascal-second (Pa·s).', true, 'Pa·s = N·s/m².']
+    ],
+    mcq: [
+      ['The resistance of a liquid to the motion of an object inside it is a result of ……', ['the liquid density', 'the liquid viscosity', 'the weight of the liquid', 'the buoyant force of liquid'], 1, ''],
+      ['The viscosity of a liquid ……', ['increases with increase in temperature', 'decreases with increase in temperature', 'decreases with decrease in temperature', 'remains constant with any change in temperature'], 1, ''],
+      ['Viscosity is the property responsible for ……', ['surface tension between molecules', 'resisting the relative motion of liquid layers', 'the temperature of the fluid', 'the liquid quantity'], 1, ''],
+      ['Viscosity is a physical property, so it depends on ……', ['the tension forces', 'the temperature', 'the type of liquid', 'b and c'], 3, ''],
+      ['What is the unit of the coefficient of viscosity?', ['N·s·m⁻²', 'J·s·m⁻³', 'Pa·s', 'all of the above'], 3, 'N·s/m² = Pa·s, and J·s/m³ = N·m·s/m³ = N·s/m².'],
+      ['The importance of lubrication is ……', ['protecting machine parts from wear', 'increasing the heat generated by friction', 'increasing the tension force', 'decreasing the tension force'], 0, '']
+    ],
+    fix: [
+      ['Viscosity is the property of [[solids that resist deformation]].', ['fluids that resists the relative motion of their layers', 'gases that expand', 'solids that conduct heat', 'metals that bend'], 0, ''],
+      ['Water is [[more]] viscous than glycerin.', ['less', 'equally', 'twice as', 'always'], 0, ''],
+      ['A highly viscous liquid flows [[quickly]].', ['slowly', 'upward', 'randomly', 'without resistance'], 0, ''],
+      ['Less viscous liquids resist motion [[more]] than highly viscous liquids.', ['less', 'equally', 'twice as much', 'always'], 0, ''],
+      ['Lubrication is carried out using [[highly]] viscous liquids.', ['suitable low-', 'solid', 'boiling', 'frozen'], 0, 'Lubricating oils need a suitable (not too high) viscosity so they flow between moving parts.']
+    ],
+    num: [
+      ['A 6 m thick layer of glycerin (η = 2 N·s/m²) lies under a flat plate of area 48 m². What force is needed to move the plate at 6 m/s?', 96, 'N', 'F = η·A·v / d = 2 × 48 × 6 / 6 = 96 N.'],
+      ['A metal plate of area 0.2 m² is on a liquid layer 0.01 m thick (η = 0.5 N·s/m²). What force moves it at a constant 0.1 m/s?', 1, 'N', 'F = η·A·v / d = 0.5 × 0.2 × 0.1 / 0.01 = 1 N.'],
+      ['A metal plate of area 0.04 m² moves steadily at 0.5 m/s over a liquid layer 0.01 m thick. The force needed is 0.1 N. Find the coefficient of viscosity.', 0.05, 'N·s/m²', 'η = F·d / (A·v) = 0.1 × 0.01 / (0.04 × 0.5) = 0.05 N·s/m².']
+    ],
+    cards: [
+      ['Define viscosity.', 'The property of a fluid responsible for resisting the relative motion of its layers.'],
+      ['State the factors affecting viscosity / the viscosity coefficient.', '1) Type of liquid. 2) Temperature: viscosity decreases as temperature increases. η = F·d / (A·v).'],
+      ['Compare friction force and viscosity.', 'Friction: resistance between solid surfaces in contact. Viscosity: resistance between the layers of a fluid. Both oppose motion.'],
+      ['State the unit of the viscosity coefficient and its equivalent unit.', 'N·s/m², which equals Pa·s (also kg/m·s).']
+    ]
+  }
+};
+
+</script>
+<script>
+(function(){
+'use strict';
+const LESSONS = window.LESSONS, QB = window.QB;
+const LKEYS = Object.keys(LESSONS);
+const KIND_LABEL = {tf:'True or False', mcq:'Choose', term:'Scientific term', comp:'Complete', fix:'Correct the mistake', prob:'Problem', num:'Solve'};
+const SHUFFLE_KINDS = ['term','comp','fix','prob'];
+const LOCAL_PASS_HASH = '5bdfaccd9ab7fdf44d2f96bdcfd1b667ea9420946615dfc9f9926e54c79e1e88';
+async function sha256(t){ try{ const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)); return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join(''); }catch(e){ return ''; } }
+const PASS_MARK = 50;
+
+/* ---------- build bank ---------- */
+let BANK = [], CARDS = [];
+LKEYS.forEach(L => {
+  const g = QB[L] || {};
+  Object.keys(g).forEach(kind => {
+    if (kind === 'cards') { g.cards.forEach((c,i)=>CARDS.push({id:`${L}-card-${i+1}`, L, q:c[0], a:c[1]})); return; }
+    g[kind].forEach((q,i) => {
+      const id = `${L}-${kind}-${i+1}`;
+      if (kind === 'tf') BANK.push({id,L,kind,t:q[0],a:q[1],ex:q[2]||''});
+      else if (kind === 'num') BANK.push({id,L,kind,t:q[0],a:q[1],u:q[2],ex:q[3]||'',tol:q[4]||0.02,abs:q[5]==='abs'});
+      else BANK.push({id,L,kind,t:q[0],o:q[1],a:q[2],ex:q[3]||''});
+    });
+  });
+});
+const BY_ID = {};
+function rebuildIndexes(){
+  Object.keys(BY_ID).forEach(k=>delete BY_ID[k]);
+  BANK.forEach(q=>BY_ID[q.id]=q);
+}
+function normalizeQuestion(q){
+  const x={...q};
+  x.id=String(x.id||('custom-'+Date.now()+'-'+Math.random().toString(36).slice(2,7)));
+  x.L=LKEYS.includes(x.L)?x.L:'L12';
+  x.kind=KIND_LABEL[x.kind]?x.kind:'mcq';
+  x.t=String(x.t||''); x.ex=String(x.ex||'');
+  if(x.kind==='tf'){ x.a=!!x.a; }
+  else if(x.kind==='num'){ x.a=Number(x.a); x.u=String(x.u||''); x.tol=Number.isFinite(Number(x.tol))?Number(x.tol):0.02; x.abs=!!x.abs; }
+  else { x.o=Array.isArray(x.o)?x.o.map(String):['','','','']; while(x.o.length<4)x.o.push(''); x.o=x.o.slice(0,4); x.a=Math.max(0,Math.min(3,Number(x.a)||0)); }
+  return x;
+}
+function applyBankPayload(payload){
+  if(!payload || !Array.isArray(payload.questions)) return false;
+  const qs=payload.questions.map(normalizeQuestion).filter(q=>q.t);
+  const cards=Array.isArray(payload.cards)?payload.cards:[];
+  BANK.length=0; qs.forEach(q=>BANK.push(q));
+  CARDS.length=0; cards.forEach((c,i)=>CARDS.push({id:c.id||`custom-card-${i+1}`,L:c.L||'L12',q:String(c.q||''),a:String(c.a||'')}));
+  rebuildIndexes();
+  return true;
+}
+
+
+/* ---------- helpers ---------- */
+const $ = (s,el=document)=>el.querySelector(s);
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const fmtTime = s => `${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,'0')}`;
+const fmtDate = iso => { try{ return new Date(iso).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}); }catch(e){ return iso; } };
+const qText = t => esc(t).replace(/\[\[(.+?)\]\]/g,'<mark>$1</mark>');
+const plain = t => String(t).replace(/\[\[(.+?)\]\]/g,'$1');
+const grade = p => p>=85?['g-a','Gold']:p>=65?['g-b','Silver']:p>=PASS_MARK?['g-c','Bronze']:['g-d','Keep going'];
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('show'),2200); }
+const ls = { get(k,d){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch(e){ return d; } }, set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); return true; }catch(e){ return false; } } };
+const memStore = {};
+function localGet(k){ const v = ls.get(k,null); return v!==null ? v : (memStore[k]||[]); }
+function localSet(k,v){ memStore[k]=v; ls.set(k,v); }
+
+/* ---------- storage (cloud via /api, fallback local) ---------- */
+const RKEY='fq-u5-results', PKEY='fq-u5-pending';
+async function timedFetch(url,opt={},ms=6000){ const c=new AbortController(); const t=setTimeout(()=>c.abort(),ms); try{ return await fetch(url,{...opt,signal:c.signal,cache:'no-store'}); } finally{ clearTimeout(t); } }
+const Store = {
+  mode:'checking',
+  ready:null,
+  init(){ return this.ready = this.ready || (async()=>{
+    try{ const r=await timedFetch('/api/results?ping=1',{},4000); const ct=r.headers.get('content-type')||''; if(r.ok && ct.includes('json')){ const j=await r.json(); if(j.storage){ this.mode='cloud'; this.flush(); return; } } }catch(e){}
+    this.mode='local';
+  })(); },
+  async flush(){ const p=localGet(PKEY); if(!p.length) return; const left=[]; for(const rec of p){ try{ const r=await timedFetch('/api/results',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(rec)}); if(!r.ok) left.push(rec); }catch(e){ left.push(rec); } } localSet(PKEY,left); },
+  async save(rec){ await this.init();
+    if(this.mode==='cloud'){ try{ const r=await timedFetch('/api/results',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(rec)}); if(r.ok) return 'cloud'; }catch(e){} localSet(PKEY,[...localGet(PKEY),rec]); return 'pending'; }
+    localSet(RKEY,[rec,...localGet(RKEY)]); return 'local'; },
+  async all(pass){ await this.init();
+    if(this.mode==='cloud'){ const r=await timedFetch('/api/results',{headers:{'x-teacher-pass':pass}}); if(r.status===401) throw new Error('auth'); if(r.status===503) throw new Error('nopass'); if(!r.ok) throw new Error('net'); return (await r.json()).results||[]; }
+    if((await sha256(pass))!==LOCAL_PASS_HASH) throw new Error('auth'); return localGet(RKEY); },
+  async del(pass,id){ if(this.mode==='cloud'){ const r=await timedFetch('/api/results'+(id?'?id='+encodeURIComponent(id):''),{method:'DELETE',headers:{'x-teacher-pass':pass}}); if(!r.ok) throw new Error('net'); return; }
+    localSet(RKEY, id ? localGet(RKEY).filter(x=>x.id!==id) : []); },
+  async board(){ await this.init();
+    if(this.mode==='cloud'){ try{ const r=await timedFetch('/api/results?leaderboard=1'); if(r.ok) return (await r.json()).board||[]; }catch(e){} return []; }
+    const best={}; localGet(RKEY).forEach(r=>{ const k=(r.name+'|'+r.cls).toLowerCase(); const c=best[k]; if(!c||r.pct>c.pct||(r.pct===c.pct&&r.points>c.points)) best[k]=r; });
+    return Object.values(best).sort((a,b)=>b.pct-a.pct||b.points-a.points||a.secs-b.secs).slice(0,10); }
+};
+const QuestionStore = {
+  mode:'checking', ready:null,
+  init(){ return this.ready=this.ready||(async()=>{
+    try{
+      const r=await timedFetch('/api/questions',{},5000);
+      const ct=r.headers.get('content-type')||'';
+      if(r.ok && ct.includes('json')){ const j=await r.json(); if(j.storage){ this.mode='cloud'; if(j.questions) applyBankPayload(j); return; } if(j.questions) applyBankPayload(j); }
+    }catch(e){}
+    const local=ls.get('fq-u5-question-bank',null); if(local) applyBankPayload(local); this.mode='local';
+  })(); },
+  async save(pass){
+    const payload={questions:BANK,cards:CARDS};
+    localSet('fq-u5-question-bank',payload);
+    await this.init();
+    if(this.mode==='cloud'){
+      try{ const r=await timedFetch('/api/questions',{method:'PUT',headers:{'Content-Type':'application/json','x-teacher-pass':pass},body:JSON.stringify(payload)},7000); if(r.ok) return 'cloud'; if(r.status===401) throw new Error('auth'); }
+      catch(e){ if(e.message==='auth') throw e; }
+    }
+    return 'local';
+  }
+};
+
+Store.init(); QuestionStore.init().then(()=>{ try{ route(); }catch(e){} });
+
+/* ---------- state ---------- */
+const me = ls.get('fq-me',{name:'',cls:'',lessons:LKEYS.slice(),len:20});
+let S = null;            // active quiz
+let lastResult = null;   // last finished quiz
+let teacherPass = (()=>{ try{ return sessionStorage.getItem('fq-tp')||''; }catch(e){ return ''; } })();
+let T = {rows:[], q:'', cls:'', sort:'at', dir:-1, confirm:null};
+
+/* ---------- router ---------- */
+// Student link (/play): the game only, no Teacher button
+const STUDENT_ONLY = /\/play\/?$/.test(location.pathname);
+const savedPlayUrl = (()=>{ try{return localStorage.getItem('fq-play-url')||'';}catch(e){return '';} })();
+const PLAY_URL = savedPlayUrl || (/^https?:$/.test(location.protocol) ? location.origin + '/play' : '');
+const ON_WEB = /^https?:$/.test(location.protocol) && !/claude|usercontent|localhost|127\.0\.0\.1/.test(location.hostname);
+function qrSVG(text){
+  if(typeof window.qrcode!=='function') return '';
+  const q=window.qrcode(0,'M'); q.addData(text); q.make();
+  const n=q.getModuleCount(), m=2, size=n+m*2; let d='';
+  for(let r=0;r<n;r++) for(let c=0;c<n;c++) if(q.isDark(r,c)) d+=`M${c+m} ${r+m}h1v1h-1z`;
+  return `<svg viewBox="0 0 ${size} ${size}" role="img" aria-label="QR code to open the game" shape-rendering="crispEdges"><rect width="${size}" height="${size}" fill="#ffffff"/><path d="${d}" fill="#2b2740"/></svg>`;
+}
+function showBigQR(){
+  const o=document.createElement('div'); o.className='qrbig'; o.setAttribute('role','dialog'); o.setAttribute('aria-label','Scan to play');
+  o.innerHTML=`<h2>Scan to play Forces Quest</h2><div class="qr">${qrSVG(PLAY_URL)}</div><p class="muted" style="margin:0;font-size:18px">${esc(PLAY_URL)}</p><button class="btn" id="qrClose">Close</button>`;
+  document.body.appendChild(o); const close=()=>{ o.remove(); document.removeEventListener('keydown',k); };
+  const k=e=>{ if(e.key==='Escape') close(); }; document.addEventListener('keydown',k);
+  $('#qrClose',o).onclick=close; o.onclick=e=>{ if(e.target===o) close(); }; $('#qrClose',o).focus();
+}
+function route(){
+  let v = (location.hash||'').replace('#','');
+  if(!v){ const p=location.pathname.replace(/\/+$/,''); if(p.endsWith('/teacher')) v='teacher'; else if(p.endsWith('/study')) v='study'; }
+  if(v==='quiz' && !S) v='home';
+  if(v==='result' && !lastResult) v='home';
+  if(!['home','quiz','result','study','formulas','board','teacher'].includes(v)) v='home';
+  if(STUDENT_ONLY && v==='teacher') v='home';
+  $('#navTeacher').hidden = STUDENT_ONLY;
+  document.querySelectorAll('[data-nav]').forEach(a=>a.setAttribute('aria-current', a.dataset.nav===v || (v==='quiz'||v==='result')&&a.dataset.nav==='home' ? 'page':'false'));
+  const app=$('#app'); app.className = v==='teacher' ? 'wrap wide' : 'wrap';
+  ({home:renderHome,quiz:renderQuiz,result:renderResult,study:renderStudy,formulas:renderFormulas,board:renderBoard,teacher:renderTeacher})[v]();
+  window.scrollTo(0,0);
+}
+window.addEventListener('hashchange',route);
+function go(v){ if(location.hash==='#'+v) route(); else location.hash=v; }
+
+/* ---------- HOME ---------- */
+function renderHome(){
+  const counts = Object.fromEntries(LKEYS.map(L=>[L,BANK.filter(q=>q.L===L).length]));
+  $('#app').innerHTML = `
+  <section class="view stack">
+    <div class="hero">
+      <div class="stack">
+        <div>
+          <p class="label">Unit 5 review game · ${BANK.length} questions</p>
+          <h1>Push, pull, orbit, <span>slide</span>. How strong is your physics?</h1>
+          <p class="muted" style="margin:10px 0 0">Answer questions on force, gravity, circular motion, friction and viscosity. You get instant feedback, an explanation for every answer, and a personal study plan at the end.</p>
+          <p class="ar muted" style="margin:6px 0 0">اكتب اسمك وفصلك، اختار الدروس، وابدأ التحدي.</p>
+        </div>
+        <form class="card stack" id="startForm" novalidate>
+          <div class="grid2">
+            <label class="field"><span class="label">Your name</span><input id="fName" required maxlength="60" autocomplete="name" placeholder="e.g. Youssef Ahmed" value="${esc(me.name)}"></label>
+            <label class="field"><span class="label">Class</span><input id="fCls" maxlength="30" placeholder="e.g. 1/3" value="${esc(me.cls)}"></label>
+          </div>
+          <div class="field"><span class="label">Lessons</span>
+            <div class="chips" id="lessonChips">
+              ${LKEYS.map(L=>`<button type="button" class="chip t-${LESSONS[L].tone}" data-l="${L}" aria-pressed="${me.lessons.includes(L)}"><span class="dot d-${LESSONS[L].tone}"></span><span><span class="code">${LESSONS[L].code}</span><br>${esc(LESSONS[L].name)}</span></button>`).join('')}
+            </div>
+          </div>
+          <div class="field"><span class="label">Number of questions</span>
+            <div class="chips" id="lenChips">
+              ${[10,20,30,'all'].map(n=>`<button type="button" class="chip" data-n="${n}" aria-pressed="${String(me.len)===String(n)}">${n==='all'?'All selected':n}</button>`).join('')}
+            </div>
+          </div>
+          <p class="muted" id="poolInfo" style="margin:0;font-size:14px"></p>
+          <button class="btn" type="submit" style="justify-self:start">Start the quest</button>
+        </form>
+      </div>
+      <aside class="stack">
+        ${STUDENT_ONLY?'':`<div class="card stack" style="gap:12px">
+          <div><span class="label">Host controls</span><h3>Scan to play</h3></div>
+          <div class="qrbox">
+            <div class="qr">${qrSVG(PLAY_URL)||'<span class="muted" style="font-size:12px;text-align:center">Publish first, then enter your student link below.</span>'}</div>
+            <div class="stack" style="gap:8px;min-width:0">
+              <label class="field"><span class="label">Student link used by Scan</span><input id="playUrlInput" value="${esc(PLAY_URL)}" placeholder="https://your-app.vercel.app/play"></label>
+              <p class="muted" style="margin:0;font-size:13.5px">Students scan this QR with their phone camera. The link must be an online HTTPS link, not a local file.</p>
+              <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" type="button" id="savePlayUrl">Update QR</button><button class="btn ghost small" type="button" id="qrBig">Show on projector</button><button class="btn ghost small" type="button" id="qrCopy">Copy link</button></div>
+            </div>
+          </div>
+          ${ON_WEB?'':'<p class="notice" style="margin:0;font-size:13px">You are opening the app locally. A phone cannot scan a local file. Publish the app on Vercel first, then paste the /play link above and press Update QR.</p>'}
+        </div>`}
+        <div class="deck" aria-hidden="true">
+          <div class="d-sky">F = G·m₁m₂ / r²</div>
+          <div class="d-peach">F = m·v² / r</div>
+          <div class="d-lav">F = m · a</div>
+        </div>
+        <div class="card stack">
+          <h3>How scoring works</h3>
+          <ul class="rules">
+            <li><span class="pt d-mint">+10</span><span>Every correct answer.</span></li>
+            <li><span class="pt d-peach">+5</span><span>Streak bonus: 3 or more correct in a row.</span></li>
+            <li><span class="pt d-lemon" style="background:var(--lemon)">+3</span><span>Speed bonus: correct in under 15 seconds.</span></li>
+            <li><span class="pt d-pink">−3</span><span>Using a hint (50/50 or formula).</span></li>
+          </ul>
+          <p class="muted" style="margin:0;font-size:14px">Your final grade is the percentage of correct answers. Points decide the Top 10 ties.</p>
+        </div>
+      </aside>
+    </div>
+  </section>`;
+  const chips = $('#lessonChips'), lens = $('#lenChips');
+  function info(){
+    const sel=[...chips.querySelectorAll('[aria-pressed="true"]')].map(b=>b.dataset.l);
+    const n=sel.reduce((s,L)=>s+counts[L],0);
+    $('#poolInfo').textContent = sel.length ? `${n} questions available in ${sel.length} lesson${sel.length>1?'s':''}.` : 'Pick at least one lesson.';
+  }
+  chips.addEventListener('click',e=>{ const b=e.target.closest('[data-l]'); if(!b) return; b.setAttribute('aria-pressed', b.getAttribute('aria-pressed')!=='true'); info(); });
+  lens.addEventListener('click',e=>{ const b=e.target.closest('[data-n]'); if(!b) return; lens.querySelectorAll('[data-n]').forEach(x=>x.setAttribute('aria-pressed','false')); b.setAttribute('aria-pressed','true'); });
+  info();
+  const qb=$('#qrBig'); if(qb) qb.onclick=showBigQR;
+  const saveUrl=$('#savePlayUrl'); if(saveUrl) saveUrl.onclick=()=>{ const v=$('#playUrlInput').value.trim().replace(/\/$/,''); if(!/^https:\/\//i.test(v)||!/^https:\/\/[^\s]+/i.test(v)){toast('Enter a valid HTTPS student link');return;} try{localStorage.setItem('fq-play-url',v);}catch(e){} location.reload(); };
+  const qc=$('#qrCopy'); if(qc) qc.onclick=()=>{ const v=$('#playUrlInput')?.value.trim()||PLAY_URL; if(!v){toast('Enter the student link first');return;} try{ navigator.clipboard.writeText(v).then(()=>toast('Link copied'),()=>toast(v)); }catch(e){ toast(v); } };
+  $('#startForm').addEventListener('submit',e=>{
+    e.preventDefault();
+    const name=$('#fName').value.trim(), cls=$('#fCls').value.trim();
+    const lessons=[...chips.querySelectorAll('[aria-pressed="true"]')].map(b=>b.dataset.l);
+    const lenB=lens.querySelector('[aria-pressed="true"]'); const len=lenB?lenB.dataset.n:20;
+    if(!name){ $('#fName').focus(); $('#fName').classList.add('shake'); setTimeout(()=>$('#fName').classList.remove('shake'),400); toast('Write your name first'); return; }
+    if(!lessons.length){ toast('Pick at least one lesson'); return; }
+    Object.assign(me,{name,cls,lessons,len}); ls.set('fq-me',me);
+    startQuiz(pickQuestions(lessons, len==='all'?9999:+len), 'quiz');
+  });
+}
+
+function pickQuestions(lessons,n){
+  // balanced round-robin across lessons, mixed question types
+  const pools = lessons.map(L=>shuffle(BANK.filter(q=>q.L===L)));
+  const out=[]; let i=0;
+  while(out.length<n && pools.some(p=>p.length)){ const p=pools[i%pools.length]; if(p.length) out.push(p.pop()); i++; }
+  return shuffle(out);
+}
+
+function prep(q){
+  const item={q, picked:null, ok:null, hint:false, hidden:[]};
+  if(q.o){ const idx=q.o.map((_,i)=>i); item.order = SHUFFLE_KINDS.includes(q.kind) ? shuffle(idx) : idx; }
+  return item;
+}
+
+function startQuiz(list,mode){
+  S = {mode, items:list.map(prep), i:0, points:0, streak:0, best:0, start:Date.now(), qStart:Date.now(), timer:null};
+  go('quiz');
+}
+
+/* ---------- QUIZ ---------- */
+function renderQuiz(){
+  if(!S) return go('home');
+  const it=S.items[S.i], q=it.q, L=LESSONS[q.L], n=S.items.length;
+  const answered = it.picked!==null;
+  const pct = Math.round((S.i + (answered?1:0))/n*100);
+  let body='';
+  if(q.kind==='tf'){
+    body = `<div class="opts tf">${[true,false].map(v=>`<button class="opt" data-v="${v}" ${answered?'disabled':''}>${v?'True':'False'}</button>`).join('')}</div>`;
+  } else if(q.kind==='num'){
+    body = `<form class="numrow" id="numForm"><input id="numIn" inputmode="decimal" autocomplete="off" placeholder="Your answer" aria-label="Your answer" ${answered?'disabled':''} value="${answered?esc(it.picked):''}"><span class="unit">${esc(q.u)}</span><button class="btn" ${answered?'disabled':''}>Check</button></form>`;
+  } else {
+    body = `<div class="opts">${it.order.map((oi,k)=>`<button class="opt" data-v="${oi}" ${answered?'disabled':''}><span class="key">${'ABCD'[k]}</span><span>${esc(q.o[oi])}</span></button>`).join('')}</div>`;
+  }
+  const canHint = !answered && !it.hint && (q.kind==='num' || (q.o && q.o.length>=4));
+  $('#app').innerHTML = `
+  <section class="view">
+    <div class="hud">
+      <span class="pill num"><span class="k">Q</span>${S.i+1}/${n}</span>
+      <span class="pill num"><span class="k">Points</span><span id="pts">${S.points}</span></span>
+      <span class="pill num ${S.streak>=3?'streak-on':''}"><span class="k">Streak</span>${S.streak}</span>
+      <span class="pill num"><span class="k">Time</span><span id="clock">${fmtTime((Date.now()-S.start)/1000)}</span></span>
+      ${S.mode==='retry'?'<span class="pill" style="background:var(--lemon-s)">Practice: your mistakes</span>':''}
+    </div>
+    <div class="progress" aria-hidden="true"><i style="width:${pct}%"></i></div>
+    <article class="qcard t-${L.tone}" id="qcard">
+      <div class="qmeta"><span class="tag">${L.code} · ${esc(L.name)}</span><span class="tag">${KIND_LABEL[q.kind]}</span></div>
+      <p class="qtext">${qText(q.t)}</p>
+      ${q.kind==='fix'?'<p class="qhint">Choose the word that replaces the highlighted mistake.</p>':''}
+      ${q.kind==='term'?'<p class="qhint">Which scientific term matches this description?</p>':''}
+      ${it.hint&&q.kind==='num'?`<p class="qhint"><b>Formula hint:</b> ${esc(L.formula)}</p>`:''}
+      ${body}
+      <div id="fbBox">${answered?feedbackHTML(it):''}</div>
+      <div class="qfoot">
+        <button class="btn ghost small" id="hintBtn" ${canHint?'':'disabled'}>${q.kind==='num'?'Formula hint':'50/50 hint'} (−3)</button>
+        <div style="display:flex;gap:8px">
+          <button class="btn ghost small" id="quitBtn">Finish now</button>
+          <button class="btn small" id="nextBtn" ${answered?'':'hidden'}>${S.i===n-1?'See my results':'Next question'}</button>
+        </div>
+      </div>
+    </article>
+  </section>`;
+  // restore visual state
+  if(answered && q.kind!=='num') markOptions(it);
+  it.hidden.forEach(v=>{ const b=document.querySelector(`.opt[data-v="${v}"]`); if(b){ b.classList.add('gone'); b.disabled=true; } });
+  // events
+  document.querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>{ const v=b.dataset.v; answer(q.kind==='tf'? v==='true' : +v); }));
+  const nf=$('#numForm'); if(nf){ nf.addEventListener('submit',e=>{ e.preventDefault(); const raw=$('#numIn').value.trim(); if(!raw){ toast('Type a number first'); return; } answer(raw); }); if(!answered) $('#numIn').focus(); }
+  $('#hintBtn').addEventListener('click',useHint);
+  $('#nextBtn').addEventListener('click',next);
+  $('#quitBtn').addEventListener('click',()=>{ const b=$('#quitBtn'); if(b.dataset.c){ finish(); } else { b.dataset.c=1; b.textContent='Tap again to finish'; setTimeout(()=>{ if(b.isConnected){ delete b.dataset.c; b.textContent='Finish now'; } },3000); } });
+  clearInterval(S.timer); S.timer=setInterval(()=>{ const c=$('#clock'); if(c) c.textContent=fmtTime((Date.now()-S.start)/1000); else clearInterval(S.timer); },1000);
+  if(answered) $('#nextBtn').focus();
+}
+
+function parseNum(raw){ let s=String(raw).replace(/,/g,'.').replace(/[×x]\s*10\^?/i,'e').replace(/\s+/g,''); const n=parseFloat(s); return Number.isFinite(n)?n:NaN; }
+function isRight(q,v){
+  if(q.kind==='tf') return v===q.a;
+  if(q.kind==='num'){ let n=parseNum(v); if(isNaN(n)) return false; if(q.abs) n=Math.abs(n); return Math.abs(n-q.a) <= Math.max(Math.abs(q.a)*q.tol, 0.005); }
+  return v===q.a;
+}
+function answer(v){
+  const it=S.items[S.i]; if(it.picked!==null) return;
+  it.picked=v; it.ok=isRight(it.q,v);
+  const secs=(Date.now()-S.qStart)/1000;
+  let gain=0;
+  if(it.ok){ S.streak++; S.best=Math.max(S.best,S.streak); gain=10+(S.streak>=3?5:0)+(secs<15?3:0); }
+  else S.streak=0;
+  if(it.hint) gain-=3;
+  it.gain=gain; S.points=Math.max(0,S.points+gain);
+  renderQuiz();
+  const card=$('#qcard'); card.classList.add(it.ok?'pop':'shake');
+  if(it.ok && gain>10) toast(`+${gain} points${S.streak>=3?' · streak '+S.streak:''}`);
+}
+function markOptions(it){
+  const q=it.q;
+  document.querySelectorAll('.opt').forEach(b=>{
+    const v = q.kind==='tf' ? b.dataset.v==='true' : +b.dataset.v;
+    if(v===q.a) b.classList.add('correct');
+    else if(v===it.picked) b.classList.add('wrong');
+    b.disabled=true;
+  });
+}
+function correctText(q){ if(q.kind==='tf') return q.a?'True':'False'; if(q.kind==='num') return `${q.a} ${q.u}`; return q.o[q.a]; }
+function feedbackHTML(it){
+  const q=it.q;
+  return `<div class="fb ${it.ok?'ok':'no'}" role="status"><b>${it.ok?'Correct!':'Not quite.'}${it.ok&&it.gain?` +${it.gain}`:''}</b>
+    ${it.ok?'':`<span>Correct answer: <strong>${esc(correctText(q))}</strong>${q.kind==='num'?` (you wrote ${esc(it.picked)})`:''}</span>`}
+    ${q.ex?`<span>${esc(q.ex)}</span>`:''}</div>`;
+}
+function useHint(){
+  const it=S.items[S.i], q=it.q; if(it.hint||it.picked!==null) return;
+  it.hint=true;
+  if(q.o){ const wrong=shuffle(q.o.map((_,i)=>i).filter(i=>i!==q.a)).slice(0,2); it.hidden=wrong; }
+  renderQuiz();
+}
+function next(){ if(S.i<S.items.length-1){ S.i++; S.qStart=Date.now(); renderQuiz(); } else finish(); }
+
+async function finish(){
+  clearInterval(S.timer);
+  const done=S.items.filter(it=>it.picked!==null);
+  if(!done.length){ S=null; go('home'); return; }
+  const per={}; done.forEach(it=>{ const p=per[it.q.L]||(per[it.q.L]=[0,0]); p[1]++; if(it.ok) p[0]++; });
+  const correct=done.filter(it=>it.ok).length;
+  const rec={ id:Date.now().toString(36)+Math.random().toString(36).slice(2,7), name:me.name, cls:me.cls, lessons:[...new Set(done.map(it=>it.q.L))].sort(),
+    total:done.length, correct, pct:Math.round(correct/done.length*100), points:S.points, secs:Math.round((Date.now()-S.start)/1000),
+    perLesson:per, answers:done.map(it=>[it.q.id,it.ok?1:0]), at:new Date().toISOString() };
+  lastResult={rec, items:done, mode:S.mode, best:S.best, saved: S.mode==='retry'?'practice':'saving'};
+  S=null; go('result');
+  if(lastResult.mode!=='retry'){ const r=lastResult; r.saved = await Store.save(rec); if(location.hash==='#result') renderResult(); }
+}
+
+/* ---------- RESULT ---------- */
+function renderResult(){
+  const R=lastResult; if(!R) return go('home');
+  const r=R.rec, [gc,gl]=grade(r.pct);
+  const wrong=R.items.filter(it=>!it.ok);
+  const lessonRows = Object.keys(r.perLesson).sort().map(L=>{ const [c,t]=r.perLesson[L]; return {L, c, t, p:Math.round(c/t*100)}; });
+  const weakest = lessonRows.filter(x=>x.p<75).sort((a,b)=>a.p-b.p)[0];
+  const weakKinds = {}; wrong.forEach(it=>weakKinds[it.q.kind]=(weakKinds[it.q.kind]||0)+1);
+  const topKind = Object.entries(weakKinds).sort((a,b)=>b[1]-a[1])[0];
+  const kindTip = {tf:'Read every word in True/False statements: words like "always", "never", "increases" usually decide the answer.',
+    mcq:'For multiple choice, cross out the options you are sure are wrong first.', term:'Make a list of definitions and cover the term with your hand to test yourself.',
+    comp:'Say the full sentence out loud. Proportional relationships (double, half, four times) are easy points once you know the formula.',
+    fix:'In "correct the mistake", find the key word and think of its opposite: contact ↔ non-contact, directly ↔ inversely, increases ↔ decreases.',
+    prob:'Write the formula first, then substitute with units. Check powers of 10 carefully.', num:'Write the formula, convert units first (g → kg, km/h → m/s), then calculate.'};
+  const savedMsg = {saving:'Sending your result to Dr. Raghda…', cloud:'Your result was sent to Dr. Raghda.', pending:'No internet right now. Your result is saved on this device and will be sent next time you open the quiz.', local:'Result saved on this device (demo mode).', practice:'Practice round: not counted in your grade.'}[R.saved];
+  $('#app').innerHTML = `
+  <section class="view stack">
+    <div class="card res-top">
+      <div class="ring" style="--p:${r.pct}"><div><span><b class="num">${r.pct}%</b><span class="muted" style="font-size:13px">${r.correct} of ${r.total}</span></span></div></div>
+      <div class="stack" style="gap:8px">
+        <h2 style="font-size:28px">${r.pct>=85?'Outstanding':r.pct>=65?'Great work':r.pct>=PASS_MARK?'Good effort':"Let's practise more"}, ${esc(r.name)}!</h2>
+        <div><span class="badge ${gc}">${gl} badge</span></div>
+        <div class="stats">
+          <span class="pill num"><span class="k">Points</span>${r.points}</span>
+          <span class="pill num"><span class="k">Time</span>${fmtTime(r.secs)}</span>
+          <span class="pill num"><span class="k">Best streak</span>${R.best}</span>
+        </div>
+        <p class="muted" style="margin:0;font-size:14px">${savedMsg}</p>
+      </div>
+    </div>
+
+    <div class="panels">
+      <div class="card stack">
+        <h3>Mastery by lesson</h3>
+        <div class="bars">${lessonRows.map(x=>`<div class="bar"><span>${esc(LESSONS[x.L].name)}</span><span class="tr"><i class="d-${LESSONS[x.L].tone}" style="width:${x.p}%"></i></span><span class="v num">${x.p}%</span></div>`).join('')}</div>
+      </div>
+      <div class="tip">
+        <span class="label">Your study plan</span>
+        ${weakest?`<p style="margin:0">Focus next on <b>${esc(LESSONS[weakest.L].name)}</b> (${weakest.p}%). Flip its study cards, then try a quiz on that lesson only.</p>`:`<p style="margin:0">Every lesson is at 75% or more. Try "All selected" to go for a perfect score.</p>`}
+        ${topKind?`<p style="margin:0">${kindTip[topKind[0]]}</p>`:''}
+        <p style="margin:0" class="muted">Formula to remember: ${esc(LESSONS[(weakest||lessonRows[0]).L].formula)}</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
+          ${weakest?`<button class="btn small" id="studyWeak">Study ${esc(LESSONS[weakest.L].code)} cards</button><button class="btn ghost small" id="quizWeak">Quiz ${esc(LESSONS[weakest.L].code)} only</button>`:''}
+        </div>
+      </div>
+    </div>
+
+    <div class="card stack">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
+        <h3>Review your mistakes (${wrong.length})</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          ${wrong.length?'<button class="btn small" id="retryBtn">Practise my mistakes</button>':''}
+          <button class="btn ghost small" id="againBtn">Play again</button>
+        </div>
+      </div>
+      <div class="review">
+        ${wrong.length? wrong.map(it=>`<div class="rv"><span class="label">${LESSONS[it.q.L].code} · ${KIND_LABEL[it.q.kind]}</span><span>${qText(it.q.t)}</span>
+          <span class="y">Your answer: ${esc(it.q.kind==='tf'?(it.picked?'True':'False'):it.q.kind==='num'?it.picked+' '+it.q.u:it.q.o[it.picked])}</span>
+          <span class="a">Correct: ${esc(correctText(it.q))}</span>${it.q.ex?`<span class="muted">${esc(it.q.ex)}</span>`:''}</div>`).join('') : '<p class="muted" style="margin:0">No mistakes. Perfect round!</p>'}
+      </div>
+    </div>
+  </section>`;
+  const a=$('#againBtn'); if(a) a.onclick=()=>go('home');
+  const rt=$('#retryBtn'); if(rt) rt.onclick=()=>startQuiz(shuffle(wrong.map(it=>it.q)),'retry');
+  const sw=$('#studyWeak'); if(sw) sw.onclick=()=>{ studyFilter=weakest.L; go('study'); };
+  const qw=$('#quizWeak'); if(qw) qw.onclick=()=>startQuiz(pickQuestions([weakest.L],15),'quiz');
+}
+
+/* ---------- STUDY CARDS ---------- */
+let studyFilter='all', studyIdx=0;
+function renderStudy(){
+  const list = CARDS.filter(c=>studyFilter==='all'||c.L===studyFilter);
+  if(studyIdx>=list.length) studyIdx=0;
+  const c=list[studyIdx], L=LESSONS[c.L];
+  $('#app').innerHTML = `
+  <section class="view stack">
+    <div><p class="label">Essay questions from the question bank</p><h2 style="font-size:30px">Study cards</h2>
+    <p class="muted" style="margin:6px 0 0">Read the question, answer it in your head or on paper, then tap the card to check the model answer.</p></div>
+    <div class="chips" id="sf">
+      <button class="chip" data-l="all" aria-pressed="${studyFilter==='all'}">All lessons</button>
+      ${LKEYS.map(k=>`<button class="chip t-${LESSONS[k].tone}" data-l="${k}" aria-pressed="${studyFilter===k}"><span class="dot d-${LESSONS[k].tone}"></span>${esc(LESSONS[k].name)}</button>`).join('')}
+    </div>
+    <button class="flip" id="flip" aria-label="Flip card">
+      <div class="in">
+        <div class="f t-${L.tone}"><span class="label">${L.code} · card ${studyIdx+1} of ${list.length}</span><h3>${esc(c.q)}</h3><span class="muted" style="font-size:14px">Tap to see the answer</span></div>
+        <div class="b"><span class="label">Model answer</span><p style="margin:0;font-size:17px">${esc(c.a)}</p></div>
+      </div>
+    </button>
+    <div style="display:flex;justify-content:space-between;gap:10px">
+      <button class="btn ghost" id="prevC">Previous</button>
+      <button class="btn" id="nextC">Next card</button>
+    </div>
+  </section>`;
+  $('#sf').onclick=e=>{ const b=e.target.closest('[data-l]'); if(!b) return; studyFilter=b.dataset.l; studyIdx=0; renderStudy(); };
+  $('#flip').onclick=()=>$('#flip').classList.toggle('on');
+  $('#prevC').onclick=()=>{ studyIdx=(studyIdx-1+list.length)%list.length; renderStudy(); };
+  $('#nextC').onclick=()=>{ studyIdx=(studyIdx+1)%list.length; renderStudy(); };
+}
+
+/* ---------- FORMULAS ---------- */
+function renderFormulas(){
+  const F=[
+    ['L12',"Newton's 2nd law",'F = m · a','a = F / m,  m = F / a.  Weight W = m · g'],
+    ['L12','Newton','1 N = 1 kg·m/s²','Force that gives 1 kg an acceleration of 1 m/s²'],
+    ['L13','Universal gravitation','F = G · m₁ · m₂ / r²','G = 6.67 × 10⁻¹¹ N·m²/kg². Double the distance → force ÷ 4'],
+    ['L14','Centripetal force','F = m · v² / r','Double v → force × 4. Double r → force ÷ 2'],
+    ['L14','Centripetal acceleration','a = v² / r','Always points to the center of the circle'],
+    ['L15','Friction strength','static > sliding > rolling','Depends on the pressing force and the nature of the surfaces'],
+    ['L16','Viscosity','F = η · A · v / d','η = F·d / (A·v). Unit: N·s/m² = Pa·s. Hotter liquid → lower viscosity'],
+    ['L14','Unit conversions','km/h ÷ 3.6 = m/s','g ÷ 1000 = kg']
+  ];
+  $('#app').innerHTML = `
+  <section class="view stack">
+    <div><p class="label">Keep this open while you revise</p><h2 style="font-size:30px">Formula sheet</h2></div>
+    <div class="formula">${F.map(f=>`<div class="t-${LESSONS[f[0]].tone}"><span class="label">${LESSONS[f[0]].code} · ${esc(f[1])}</span><code>${esc(f[2])}</code><span class="muted" style="font-size:14px">${esc(f[3])}</span></div>`).join('')}</div>
+  </section>`;
+}
+
+/* ---------- LEADERBOARD ---------- */
+async function renderBoard(){
+  $('#app').innerHTML = `<section class="view stack"><div><p class="label">Best score per student</p><h2 style="font-size:30px">Top 10</h2></div><div class="lb" id="lb"><p class="muted">Loading…</p></div></section>`;
+  const b=await Store.board();
+  const el=$('#lb'); if(!el) return;
+  el.innerHTML = b.length ? b.map((r,i)=>`<div class="r"><span class="rk">${i+1}</span><span style="min-width:0"><b>${esc(r.name)}</b> <span class="muted">${esc(r.cls||'')}</span></span><span class="sc ${grade(r.pct)[0]} num">${r.pct}%</span><span class="muted num" style="font-size:13px">${r.points} pts</span></div>`).join('')
+    : `<div class="card"><p style="margin:0">No scores yet. Finish a quiz to appear here.</p></div>`;
+}
+
+/* ---------- TEACHER ---------- */
+async function renderTeacher(){
+  await Store.init(); await QuestionStore.init();
+  if(!teacherPass){ return renderLogin(); }
+  $('#app').innerHTML = `<section class="view"><p class="muted">Loading results…</p></section>`;
+  try{ T.rows = await Store.all(teacherPass); }
+  catch(e){ if(e.message==='auth'){ teacherPass=''; try{sessionStorage.removeItem('fq-tp');}catch(_){} return renderLogin('Wrong password. Try again.'); } if(e.message==='nopass'){ teacherPass=''; return renderLogin('Add TEACHER_PASSWORD in Vercel → Settings → Environment Variables, then redeploy.'); } $('#app').innerHTML=`<section class="view"><div class="card"><p>Could not load results. Check the internet connection and try again.</p><button class="btn small" onclick="location.reload()">Reload</button></div></section>`; return; }
+  drawDashboard();
+}
+function renderLogin(err){
+  $('#app').innerHTML = `
+  <section class="view"><form class="card stack login" id="loginF">
+    <div><p class="label">Teacher area</p><h2>Dr. Raghda's dashboard</h2></div>
+    <label class="field"><span class="label">Password</span><input id="tp" type="password" autocomplete="current-password" required></label>
+    ${err?`<p style="margin:0;color:var(--bad);font-weight:700">${esc(err)}</p>`:''}
+    <button class="btn">Open dashboard</button>
+  </form></section>`;
+  $('#tp').focus();
+  $('#loginF').onsubmit=e=>{ e.preventDefault(); teacherPass=$('#tp').value; try{sessionStorage.setItem('fq-tp',teacherPass);}catch(_){} renderTeacher(); };
+}
+
+
+function renderQuestionBank(){
+  const lessons=Object.entries(LESSONS);
+  const rows=BANK.slice().sort((a,b)=>a.L.localeCompare(b.L)||a.kind.localeCompare(b.kind)||a.id.localeCompare(b.id));
+  $('#app').innerHTML=`<section class="view wide">
+    <div class="row" style="justify-content:space-between;align-items:flex-end;gap:12px">
+      <div><p class="label">Teacher Mode · Question Bank</p><h2 style="font-size:30px;margin:0">Control every question & answer</h2><p class="muted" style="margin:6px 0 0">Numbers and correct answers are stored together. Nothing is randomly generated.</p></div>
+      <div class="row" style="gap:8px"><button class="btn ghost small" id="backDash">Dashboard</button><button class="btn small" id="addQ">+ Add question</button></div>
+    </div>
+    <div class="card" style="margin-top:16px;overflow:auto"><table class="data"><thead><tr><th>Lesson</th><th>Type</th><th>Question</th><th>Correct answer</th><th></th></tr></thead><tbody>
+      ${rows.map(q=>`<tr><td>${esc(LESSONS[q.L]?.code||q.L)}</td><td>${esc(KIND_LABEL[q.kind]||q.kind)}</td><td style="min-width:360px">${esc(plain(q.t))}</td><td style="min-width:180px">${esc(correctText(q))}</td><td><button class="btn ghost small" data-editq="${esc(q.id)}">Edit</button></td></tr>`).join('')}
+    </tbody></table></div>
+    <p class="muted" style="font-size:13px">${rows.length} questions. Changes are saved to this device and, when Upstash + TEACHER_PASSWORD are configured, to the shared online bank for all students.</p>
+  </section>`;
+  $('#backDash').onclick=renderTeacher;
+  $('#addQ').onclick=()=>openQuestionEditor(null);
+  document.querySelectorAll('[data-editq]').forEach(b=>b.onclick=()=>openQuestionEditor(BY_ID[b.dataset.editq]));
+}
+function openQuestionEditor(q){
+  const x=q?JSON.parse(JSON.stringify(q)):{id:'',L:'L12',kind:'mcq',t:'',o:['','','',''],a:0,ex:'',u:'N',tol:0.02,abs:false};
+  const isNum=x.kind==='num', isTF=x.kind==='tf';
+  const options=Array.isArray(x.o)?x.o:['','','',''];
+  const overlay=document.createElement('div'); overlay.className='qrbig'; overlay.style.overflow='auto';
+  overlay.innerHTML=`<div class="card" style="width:min(900px,96vw);max-height:92vh;overflow:auto"><div class="row" style="justify-content:space-between"><div><p class="label">Teacher Question Editor</p><h2 style="margin:0">${q?'Edit question':'Add question'}</h2></div><button class="btn ghost small" id="qeClose">Close</button></div>
+    <div class="grid2" style="margin-top:16px">
+      <label class="field"><span class="label">Lesson</span><select id="qeL">${lessons.map(([k,v])=>`<option value="${k}" ${x.L===k?'selected':''}>${esc(v.code)} · ${esc(v.name)}</option>`).join('')}</select></label>
+      <label class="field"><span class="label">Question type</span><select id="qeKind"><option value="mcq">Choose</option><option value="tf">True or False</option><option value="num">Solve (number)</option><option value="term">Scientific term</option><option value="comp">Complete</option><option value="fix">Correct the mistake</option><option value="prob">Problem</option></select></label>
+    </div>
+    <label class="field"><span class="label">Question / statement</span><textarea id="qeT" rows="4">${esc(x.t)}</textarea></label>
+    <div id="qeAnswerArea"></div>
+    <label class="field"><span class="label">Explanation / solution</span><textarea id="qeEx" rows="3">${esc(x.ex||'')}</textarea></label>
+    <div class="row" style="justify-content:flex-end;gap:8px"><button class="btn danger small" id="qeDelete" ${q?'':'hidden'}>Delete</button><button class="btn small" id="qeSave">Save question</button></div>
+  </div>`;
+  document.body.appendChild(overlay);
+  $('#qeKind',overlay).value=x.kind;
+  function drawAnswer(){
+    const kind=$('#qeKind',overlay).value;
+    if(kind==='tf') $('#qeAnswerArea',overlay).innerHTML=`<label class="field"><span class="label">Correct answer</span><select id="qeA"><option value="true" ${x.a===true?'selected':''}>True</option><option value="false" ${x.a===false?'selected':''}>False</option></select></label>`;
+    else if(kind==='num') $('#qeAnswerArea',overlay).innerHTML=`<div class="grid2"><label class="field"><span class="label">Correct number</span><input id="qeA" type="number" step="any" value="${esc(x.a)}"></label><label class="field"><span class="label">Unit</span><input id="qeU" value="${esc(x.u||'')}"></label><label class="field"><span class="label">Tolerance (e.g. 0.02 = ±2%)</span><input id="qeTol" type="number" step="0.001" value="${esc(x.tol??0.02)}"></label><label class="field"><span class="label">Compare absolute value?</span><select id="qeAbs"><option value="false" ${!x.abs?'selected':''}>No</option><option value="true" ${x.abs?'selected':''}>Yes</option></select></label></div>`;
+    else $('#qeAnswerArea',overlay).innerHTML=`<div class="grid2">${[0,1,2,3].map(i=>`<label class="field"><span class="label">Option ${'ABCD'[i]} ${i===0?'(correct by default for shuffled types)':''}</span><input class="qeOpt" data-i="${i}" value="${esc(options[i]||'')}"></label>`).join('')}</div><label class="field"><span class="label">Correct option</span><select id="qeA">${[0,1,2,3].map(i=>`<option value="${i}" ${Number(x.a)===i?'selected':''}>${'ABCD'[i]}</option>`).join('')}</select></label>`;
+  }
+  drawAnswer();
+  $('#qeKind',overlay).onchange=()=>{ x.kind=$('#qeKind',overlay).value; drawAnswer(); };
+  $('#qeClose',overlay).onclick=()=>overlay.remove();
+  $('#qeSave',overlay).onclick=async()=>{
+    const kind=$('#qeKind',overlay).value; const id=x.id||`custom-${Date.now()}-${Math.random().toString(36).slice(2,7)}`; const nq={id,L:$('#qeL',overlay).value,kind,t:$('#qeT',overlay).value.trim(),ex:$('#qeEx',overlay).value.trim()};
+    if(!nq.t){toast('Write the question first');return;}
+    if(kind==='tf') nq.a=$('#qeA',overlay).value==='true';
+    else if(kind==='num'){ nq.a=Number($('#qeA',overlay).value); nq.u=$('#qeU',overlay).value.trim(); nq.tol=Number($('#qeTol',overlay).value)||0.02; nq.abs=$('#qeAbs',overlay).value==='true'; if(!Number.isFinite(nq.a)){toast('Enter a valid correct number');return;} }
+    else { nq.o=[...overlay.querySelectorAll('.qeOpt')].sort((a,b)=>a.dataset.i-b.dataset.i).map(i=>i.value.trim()); nq.a=Number($('#qeA',overlay).value); if(nq.o.some(v=>!v)){toast('Fill all four options');return;} }
+    const idx=BANK.findIndex(z=>z.id===id); if(idx>=0) BANK[idx]=normalizeQuestion(nq); else BANK.push(normalizeQuestion(nq)); rebuildIndexes();
+    try{ const mode=await QuestionStore.save(teacherPass); toast(mode==='cloud'?'Question saved for all students':'Question saved on this device'); overlay.remove(); renderQuestionBank(); }catch(e){toast(e.message==='auth'?'Teacher password rejected':'Could not save question');}
+  };
+  $('#qeDelete',overlay).onclick=async()=>{ if(!confirm('Delete this question?')) return; const idx=BANK.findIndex(z=>z.id===x.id); if(idx>=0) BANK.splice(idx,1); rebuildIndexes(); try{await QuestionStore.save(teacherPass);toast('Question deleted');overlay.remove();renderQuestionBank();}catch(e){toast('Could not save deletion');} };
+}
+
+function analyse(rows){
+  const n=rows.length, students=new Set(rows.map(r=>(r.name+'|'+r.cls).toLowerCase())).size;
+  const avg=n?Math.round(rows.reduce((s,r)=>s+r.pct,0)/n):0;
+  const top=n?Math.max(...rows.map(r=>r.pct)):0;
+  const pass=n?Math.round(rows.filter(r=>r.pct>=PASS_MARK).length/n*100):0;
+  const avgTime=n?Math.round(rows.reduce((s,r)=>s+r.secs,0)/n):0;
+  const les={}; LKEYS.forEach(L=>les[L]=[0,0]);
+  rows.forEach(r=>Object.entries(r.perLesson||{}).forEach(([L,[c,t]])=>{ if(les[L]){ les[L][0]+=c; les[L][1]+=t; } }));
+  const qs={}; rows.forEach(r=>(r.answers||[]).forEach(([id,ok])=>{ const x=qs[id]||(qs[id]=[0,0]); x[1]++; if(ok) x[0]++; }));
+  const dist=[0,0,0,0]; rows.forEach(r=>dist[r.pct>=85?0:r.pct>=65?1:r.pct>=PASS_MARK?2:3]++);
+  return {n,students,avg,top,pass,avgTime,les,qs,dist};
+}
+
+function drawDashboard(){
+  const classes=[...new Set(T.rows.map(r=>r.cls).filter(Boolean))].sort();
+  const view=T.rows.filter(r=>(!T.cls||r.cls===T.cls)&&(!T.q||r.name.toLowerCase().includes(T.q.toLowerCase())));
+  const A=analyse(view);
+  const sorted=view.slice().sort((a,b)=>{ const k=T.sort; const x=a[k],y=b[k]; return (x>y?1:x<y?-1:0)*T.dir; });
+  const hard=Object.entries(A.qs).filter(([id,v])=>BY_ID[id]&&v[1]>=2).map(([id,[c,t]])=>({q:BY_ID[id],p:Math.round(c/t*100),t})).sort((a,b)=>a.p-b.p).slice(0,8);
+  const distLabels=[['Gold 85–100','g-a','d-mint'],['Silver 65–84','g-b','d-sky'],['Bronze 50–64','g-c','d-lemon'],['Below 50','g-d','d-pink']];
+  const maxD=Math.max(1,...A.dist);
+  const th=(k,l)=>`<th data-k="${k}" aria-sort="${T.sort===k?(T.dir>0?'ascending':'descending'):'none'}">${l}${T.sort===k?(T.dir>0?' ↑':' ↓'):''}</th>`;
+  $('#app').innerHTML = `
+  <section class="view stack">
+    <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:end">
+      <div><p class="label">Teacher dashboard · Unit 5</p><h2 style="font-size:30px">Dr. Raghda's class results</h2></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn small" id="xls" ${view.length?'':'disabled'}>Download Excel</button>
+        <button class="btn small" id="questionBankBtn">Question Bank</button><button class="btn ghost small" id="refresh">Refresh</button>
+        <button class="btn ghost small" id="logout">Lock</button>
+      </div>
+    </div>
+    ${Store.mode==='local'?`<p class="notice" style="margin:0">Demo mode: the online database is not connected yet, so you only see results played on this device. After you connect Upstash Redis on Vercel, every student's result appears here.</p>`:''}
+    <div class="kpis">
+      <div class="kpi t-lav"><span class="label">Attempts</span><b class="num">${A.n}</b></div>
+      <div class="kpi t-sky"><span class="label">Students</span><b class="num">${A.students}</b></div>
+      <div class="kpi t-mint"><span class="label">Class average</span><b class="num">${A.avg}%</b></div>
+      <div class="kpi t-peach"><span class="label">Highest</span><b class="num">${A.top}%</b></div>
+      <div class="kpi t-pink"><span class="label">Pass rate (≥${PASS_MARK}%)</span><b class="num">${A.pass}%</b></div>
+    </div>
+    <div class="panels">
+      <div class="card stack">
+        <h3>Class mastery by lesson</h3>
+        <div class="bars">${LKEYS.map(L=>{ const [c,t]=A.les[L]; const p=t?Math.round(c/t*100):null; return `<div class="bar"><span>${esc(LESSONS[L].name)}</span><span class="tr"><i class="d-${LESSONS[L].tone}" style="width:${p||0}%"></i></span><span class="v num">${p==null?'–':p+'%'}</span></div>`; }).join('')}</div>
+        <p class="muted" style="margin:0;font-size:13px">Share of correct answers per lesson across all attempts shown.</p>
+      </div>
+      <div class="card stack">
+        <h3>Grade distribution</h3>
+        <div class="bars">${A.dist.map((d,i)=>`<div class="bar"><span><span class="sc ${distLabels[i][1]}" style="min-width:0">${distLabels[i][0]}</span></span><span class="tr"><i class="${distLabels[i][2]}" style="width:${d/maxD*100}%"></i></span><span class="v num">${d}</span></div>`).join('')}</div>
+        <p class="muted" style="margin:0;font-size:13px">Average time per attempt: ${fmtTime(A.avgTime)}</p>
+      </div>
+    </div>
+    <div class="card stack">
+      <h3>Questions to re-teach</h3>
+      ${hard.length?`<div class="hard">${hard.map(h=>`<div><span class="sc ${grade(h.p)[0]} num">${h.p}%</span><span>${esc(plain(h.q.t))} <span class="muted">· ${LESSONS[h.q.L].code}, ${h.t} answers · correct: ${esc(correctText(h.q))}</span></span></div>`).join('')}</div>`:'<p class="muted" style="margin:0">Appears once a question has been answered at least twice.</p>'}
+    </div>
+    <div class="card stack">
+      <div class="toolbar">
+        <label class="field"><span class="label">Search student</span><input id="fq" placeholder="Name" value="${esc(T.q)}"></label>
+        <label class="field"><span class="label">Class</span><select id="fc"><option value="">All classes</option>${classes.map(c=>`<option ${c===T.cls?'selected':''}>${esc(c)}</option>`).join('')}</select></label>
+        <div id="clearBox">${T.confirm==='all'?`<span class="confirm"><span>Delete all ${T.rows.length} results?</span><button class="btn danger small" id="clearYes">Delete all</button><button class="btn ghost small" id="clearNo">Cancel</button></span>`:`<button class="btn danger small" id="clearAll" ${T.rows.length?'':'disabled'}>Clear all results</button>`}</div>
+      </div>
+      <div class="tbl"><table>
+        <thead><tr>${th('name','Student')}${th('cls','Class')}${th('pct','Score')}${th('correct','Correct')}${th('points','Points')}${th('secs','Time')}<th>Lessons</th>${th('at','Date')}<th></th></tr></thead>
+        <tbody>${sorted.length?sorted.map(r=>`<tr>
+          <td><b>${esc(r.name)}</b></td><td>${esc(r.cls||'–')}</td>
+          <td><span class="sc ${grade(r.pct)[0]} num">${r.pct}%</span></td>
+          <td class="num">${r.correct}/${r.total}</td><td class="num">${r.points}</td><td class="num">${fmtTime(r.secs)}</td>
+          <td><span class="minis">${LKEYS.map(L=>{ const v=(r.perLesson||{})[L]; if(!v) return `<i title="${LESSONS[L].code}: not included" style="background:var(--surface2)"></i>`; const p=Math.round(v[0]/v[1]*100); return `<i title="${LESSONS[L].code}: ${p}%" class="d-${LESSONS[L].tone}" style="opacity:${.25+p/100*.75}"></i>`; }).join('')}</span></td>
+          <td class="muted">${esc(fmtDate(r.at))}</td>
+          <td>${T.confirm===r.id?`<span class="confirm"><button class="btn danger small" data-del="${esc(r.id)}">Delete</button><button class="btn ghost small" data-cancel="1">Keep</button></span>`:`<button class="iconbtn" data-ask="${esc(r.id)}" aria-label="Delete result of ${esc(r.name)}">Delete</button>`}</td>
+        </tr>`).join(''):`<tr><td colspan="9" class="muted" style="text-align:center;padding:28px">No results yet. Share the quiz link with your students; their scores appear here.</td></tr>`}</tbody>
+      </table></div>
+      <p class="muted" style="margin:0;font-size:13px">Lesson squares: darker = higher score in that lesson. Hover for the exact %.</p>
+    </div>
+  </section>`;
+  $('#fq').oninput=e=>{ T.q=e.target.value; const pos=e.target.selectionStart; drawDashboard(); const f=$('#fq'); f.focus(); f.setSelectionRange(pos,pos); };
+  $('#fc').onchange=e=>{ T.cls=e.target.value; drawDashboard(); };
+  document.querySelectorAll('th[data-k]').forEach(h=>h.onclick=()=>{ const k=h.dataset.k; if(T.sort===k) T.dir*=-1; else { T.sort=k; T.dir=(k==='name'||k==='cls')?1:-1; } drawDashboard(); });
+  $('#questionBankBtn').onclick=renderQuestionBank;
+  $('#refresh').onclick=renderTeacher;
+  $('#logout').onclick=()=>{ teacherPass=''; try{sessionStorage.removeItem('fq-tp');}catch(_){} renderLogin(); };
+  $('#xls').onclick=()=>exportExcel(sorted);
+  const ca=$('#clearAll'); if(ca) ca.onclick=()=>{ T.confirm='all'; drawDashboard(); };
+  const cn=$('#clearNo'); if(cn) cn.onclick=()=>{ T.confirm=null; drawDashboard(); };
+  const cy=$('#clearYes'); if(cy) cy.onclick=async()=>{ try{ await Store.del(teacherPass); T.confirm=null; toast('All results deleted'); renderTeacher(); }catch(e){ toast('Could not delete. Try again.'); } };
+  document.querySelectorAll('[data-ask]').forEach(b=>b.onclick=()=>{ T.confirm=b.dataset.ask; drawDashboard(); });
+  document.querySelectorAll('[data-cancel]').forEach(b=>b.onclick=()=>{ T.confirm=null; drawDashboard(); });
+  document.querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{ try{ await Store.del(teacherPass,b.dataset.del); T.rows=T.rows.filter(r=>r.id!==b.dataset.del); T.confirm=null; toast('Result deleted'); drawDashboard(); }catch(e){ toast('Could not delete. Try again.'); } });
+}
+
+function exportExcel(rows){
+  if(!window.XLSX){ toast('Excel library did not load. Check your connection.'); return; }
+  const wb=XLSX.utils.book_new();
+  // Sheet 1: all attempts
+  const s1=rows.map(r=>{ const o={'Student':r.name,'Class':r.cls||'','Score %':r.pct,'Correct':r.correct,'Questions':r.total,'Points':r.points,'Time (min:sec)':fmtTime(r.secs),'Grade':grade(r.pct)[1]};
+    LKEYS.forEach(L=>{ const v=(r.perLesson||{})[L]; o[`${LESSONS[L].code} ${LESSONS[L].name} %`]= v?Math.round(v[0]/v[1]*100):''; });
+    o['Date']=new Date(r.at).toLocaleString('en-GB'); return o; });
+  const ws1=XLSX.utils.json_to_sheet(s1); ws1['!cols']=Object.keys(s1[0]||{}).map(k=>({wch:Math.max(10,k.length+2)})); ws1['!cols'][0]={wch:24};
+  XLSX.utils.book_append_sheet(wb,ws1,'All attempts');
+  // Sheet 2: per-student summary
+  const st={}; rows.forEach(r=>{ const k=(r.name+'|'+r.cls).toLowerCase(); (st[k]||(st[k]={name:r.name,cls:r.cls,list:[]})).list.push(r); });
+  const s2=Object.values(st).map(s=>{ const p=s.list.map(r=>r.pct); return {'Student':s.name,'Class':s.cls||'','Attempts':s.list.length,'Best %':Math.max(...p),'Average %':Math.round(p.reduce((a,b)=>a+b,0)/p.length),'Last %':s.list.slice().sort((a,b)=>a.at<b.at?1:-1)[0].pct,'Best grade':grade(Math.max(...p))[1]}; }).sort((a,b)=>b['Best %']-a['Best %']);
+  const ws2=XLSX.utils.json_to_sheet(s2); ws2['!cols']=[{wch:24},{wch:10},{wch:10},{wch:10},{wch:12},{wch:10},{wch:12}];
+  XLSX.utils.book_append_sheet(wb,ws2,'Students summary');
+  // Sheet 3: lessons
+  const A=analyse(rows);
+  const s3=LKEYS.map(L=>{ const [c,t]=A.les[L]; return {'Code':LESSONS[L].code,'Lesson':LESSONS[L].name,'Answers':t,'Correct':c,'Class mastery %':t?Math.round(c/t*100):''}; });
+  const ws3=XLSX.utils.json_to_sheet(s3); ws3['!cols']=[{wch:8},{wch:22},{wch:10},{wch:10},{wch:16}];
+  XLSX.utils.book_append_sheet(wb,ws3,'Lesson mastery');
+  // Sheet 4: question analysis
+  const s4=Object.entries(A.qs).filter(([id])=>BY_ID[id]).map(([id,[c,t]])=>{ const q=BY_ID[id]; return {'Lesson':LESSONS[q.L].code,'Type':KIND_LABEL[q.kind],'Question':plain(q.t),'Correct answer':correctText(q),'Times answered':t,'Correct %':Math.round(c/t*100)}; }).sort((a,b)=>a['Correct %']-b['Correct %']);
+  const ws4=XLSX.utils.json_to_sheet(s4.length?s4:[{'Lesson':'','Type':'','Question':'No answers yet','Correct answer':'','Times answered':'','Correct %':''}]); ws4['!cols']=[{wch:8},{wch:18},{wch:70},{wch:28},{wch:14},{wch:10}];
+  XLSX.utils.book_append_sheet(wb,ws4,'Question analysis');
+  const d=new Date(); const stamp=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  try{ XLSX.writeFile(wb,`Dr-Raghda-Unit5-results-${stamp}.xlsx`); toast('Excel file downloaded'); }catch(e){ toast('Download blocked in this preview. It works on the Vercel site.'); }
+}
+
+try{ route(); }catch(e){ document.getElementById('app').innerHTML='<p style="padding:24px">Something went wrong while loading the quiz. Refresh the page.</p>'; console.error(e); }
+})();
+</script>
+</body>
+</html>

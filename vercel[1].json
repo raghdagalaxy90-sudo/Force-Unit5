@@ -1,0 +1,17 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/teacher",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/study",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/play",
+      "destination": "/index.html"
+    }
+  ]
+}
